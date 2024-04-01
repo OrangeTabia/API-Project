@@ -2,7 +2,7 @@
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
-  options.schema = process.env.bear_bnb_schema
+  options.schema = process.env.SCHEMA
 }
 
 /** @type {import('sequelize-cli').Migration} */
