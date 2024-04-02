@@ -21,7 +21,7 @@ module.exports = {
       },
       url: {
         type: Sequelize.STRING, 
-        allNull: true
+        allowNull: true
       },
       createdAt: {
         allowNull: false,
