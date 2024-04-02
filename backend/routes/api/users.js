@@ -11,6 +11,16 @@ const { handleValidationErrors } = require('../../utils/validation');
 
 
 const validateSignup = [
+  check('firstName')
+    .exists({ checkFalsy: true })
+    .isAlpha()
+    .isLength({ min: 1, max: 50 })
+    .withMessage('First Name is required'),
+  check('lastName')
+    .exists({ checkFalsy: true })
+    .isAlpha()
+    .isLength({ min: 1, max: 50 })
+    .withMessage('Last Name is required'),
   check('email')
     .exists({ checkFalsy: true })
     .isEmail()
@@ -30,16 +40,54 @@ const validateSignup = [
   handleValidationErrors
 ];
 
+// check email middleware
+const checkEmail = async (req, res, next) => {
+  const { email } = req.body;
+  let existing = await User.findOne({
+    where: { email: email}
+  }); 
+
+  if (existing) {
+    res.status(500).json({
+      message: "User already exists",
+      errors: {
+        email: "User with that email already exists" 
+      }
+    }); 
+  }
+  next(); 
+}
+
+// check username middleware
+const checkUsername = async (req, res, next) => {
+  const { username } = req.body;
+  let existing = await User.findOne({
+    where: { username: username}
+  }); 
+
+  if (existing) {
+    res.status(500).json({
+      message: "User already exists",
+      errors: {
+        username: "User with that username already exists" 
+      }
+    }); 
+  }
+  next(); 
+}
+
 
 // Sign up
 router.post(
     '/',
     validateSignup,
+    checkEmail,
+    checkUsername,
     async (req, res) => {
       const { firstName, lastName, email, password, username } = req.body;
       const hashedPassword = bcrypt.hashSync(password);
       const user = await User.create({ firstName, lastName, email, username, hashedPassword });
-  
+
       const safeUser = {
         id: user.id,
         firstName: user.firstName,
