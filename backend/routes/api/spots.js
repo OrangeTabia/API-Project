@@ -251,8 +251,64 @@ router.post('/', [requireAuth, validateCreateSpot], async (req, res) => {
 }); 
 
 
+// Middleware for spot belonging to current user
+const authorizeSpotOwner = async (req, res, next) => {
+    const user = req.user;
+
+    if (user) {
+        const spotId = req.params.spotId;
+
+        // See if there's a spot associated with the spotId param
+        const currentSpot = await Spot.findOne({
+            where: { 
+                // AND belongs to the user
+                id: spotId,
+                ownerId: user.id,
+            }
+        });
+        // Set it as a request attribute
+        req.spot = currentSpot; 
+        next();
+
+    } else {
+        const err = new Error('Authorization required');
+        err.title = 'Authorization required';
+        err.erros = { message: 'Forbidden'}; 
+        err.status = 403;
+        return next(err); 
+    }
+}
+
 
 // Add an image to a spot based on spot's id
+router.post('/:spotId/images', [requireAuth, authorizeSpotOwner], async (req, res) => {
+
+    // Pull the spot from the request middle ware
+    const { spot } = req;
+
+    // Pull out the request body
+    const { url, preview } = req.body;
+
+    if (spot) {
+        const newImage = await SpotImage.create({
+            spotId : spot.id,
+            url,
+            preview
+        });
+        // Grab the id
+        const { id } = newImage;
+        const payload = { 
+            id, url, preview
+        }
+        res.json(payload);
+    } else {
+        res.json({
+            message: "Spot couldn't be found"
+        }); 
+    }
+});
+
+
 
 
 module.exports = router;
