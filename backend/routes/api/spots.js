@@ -8,7 +8,7 @@ const { handleValidationErrors } = require('../../utils/validation');
 const router = express.Router();
 
 
-// Get all spots
+// GET ALL SPOTS
 router.get('/', async (req, res) => {
 
     const allSpots = await Spot.findAll({
@@ -54,7 +54,7 @@ router.get('/', async (req, res) => {
             price,
             createdAt,
             updatedAt,
-            // Ensure we round to the nearest 
+            // Ensure we round to the nearest .5 with Math.floor
             avgRating: Math.floor(spotRating.dataValues.avgRating * 2) / 2,
             previewImage: spot.SpotImages[0]?.url,
         }
@@ -66,7 +66,7 @@ router.get('/', async (req, res) => {
 }); 
 
 
-// Get all spots owned by the current user
+// GET ALL SPOTS OWNED BY THE CURRENT USER
 router.get('/current', requireAuth, async (req, res) => {
     const {user} = req;
 
@@ -126,7 +126,7 @@ router.get('/current', requireAuth, async (req, res) => {
     }); 
 }); 
 
-// Get details of spot by spotId
+// GET DETAILS OF A SPOT FROM AN ID
 router.get('/:spotId', async (req, res) => {
     const spotId = req.params.spotId;
     const spot = await Spot.findByPk(spotId, { 
@@ -137,8 +137,6 @@ router.get('/:spotId', async (req, res) => {
     }); 
 
     if (spot) {
-        // Get the avgRating and numReviews
-
         const {id, ownerId, address, city, state, country, lat, lng, name, description, price, createdAt, updatedAt } = spot;
 
         const spotRating = await Spot.findOne({
@@ -226,7 +224,7 @@ const validateCreateSpot = [
   ];
 
 
-// Create a spot
+// CREATE A SPOT
 router.post('/', [requireAuth, validateCreateSpot], async (req, res) => {
     const {address, city, state, country, lat, lng, name, description, price} = req.body; 
 
@@ -280,7 +278,7 @@ const authorizeSpotOwner = async (req, res, next) => {
 }
 
 
-// Add an image to a spot based on spot's id
+// ADD AN IMAGE TO A SPOT BASED ON THE SPOT'S ID 
 router.post('/:spotId/images', [requireAuth, authorizeSpotOwner], async (req, res) => {
 
     // Pull the spot from the request middle ware
@@ -297,10 +295,12 @@ router.post('/:spotId/images', [requireAuth, authorizeSpotOwner], async (req, re
         });
         // Grab the id
         const { id } = newImage;
-        const payload = { 
-            id, url, preview
-        }
-        res.json(payload);
+
+        res.json({
+            id, 
+            url,
+            preview
+        });
     } else {
         res.status(404); 
         res.json({
@@ -309,7 +309,50 @@ router.post('/:spotId/images', [requireAuth, authorizeSpotOwner], async (req, re
     }
 });
 
-// Edit a spot
+// EDIT A SPOT
+router.put('/:spotId', [requireAuth, authorizeSpotOwner, validateCreateSpot], async (req, res) => {
+    const spotId = req.params.spotId;
+    const currentSpot = await Spot.findByPk(spotId); 
+    
+    const { address, city, state, country, lat, lng, name, description, price } = req.body;
+
+    if (currentSpot) {
+        if (address !== undefined) currentSpot.address = address;
+        if (city !== undefined) currentSpot.city = city;
+        if (state !== undefined) currentSpot.state = state;
+        if (country !== undefined) currentSpot.country = country;
+        if (lat !== undefined) currentSpot.lat = lat;
+        if (lng !== undefined) currentSpot.lng = lng;
+        if (name !== undefined) currentSpot.name = name;
+        if (description !== undefined) currentSpot.description = description;
+        if (price !== undefined) currentSpot.price = price;
+
+        const { ownerId } = currentSpot;
+
+        await currentSpot.save();
+
+        res.json({
+            id: parseInt(spotId),
+            ownerId, 
+            address,
+            city,
+            state,
+            country,
+            lat,
+            lng,
+            name,
+            description,
+            price
+        });
+    } else {
+        res.status(404)
+        res.json({
+            message: "Spot couldn't be found"
+        });
+    }
+}); 
+
+
 
 
 
