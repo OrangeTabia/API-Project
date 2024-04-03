@@ -1,5 +1,6 @@
 // backend/utils/validation.js
 const { validationResult } = require('express-validator');
+const { check } = require('express-validator');
 
 // middleware for formatting errors from express-validator middleware
 // (to customize, see express-validator's documentation)
@@ -21,6 +22,20 @@ const handleValidationErrors = (req, _res, next) => {
   next();
 };
 
+// middleware that checks key of credential and key of password when logging in
+const validateLogin = [
+  check('credential')
+    .exists({ checkFalsy: true })
+    .notEmpty()
+    .withMessage('Please provide a valid email or username.'),
+  check('password')
+    .exists({ checkFalsy: true })
+    .withMessage('Please provide a password.'),
+ // Error Response for Body Validation Errors
+  handleValidationErrors,
+];
+
 module.exports = {
-  handleValidationErrors
+  handleValidationErrors,
+  validateLogin,
 };
