@@ -182,7 +182,7 @@ router.get('/:spotId', async (req, res) => {
         res.json(payload); 
     } else {
         res.json({
-            message: "Spot couldn't be found"
+            message: 'Spot could not be found'
         }); 
     }
 });
@@ -304,7 +304,7 @@ router.post('/:spotId/images', [requireAuth, authorizeSpotOwner], async (req, re
     } else {
         res.status(404); 
         res.json({
-            message: "Spot couldn't be found"
+            message: 'Spot could not be found'
         }); 
     }
 });
@@ -347,12 +347,31 @@ router.put('/:spotId', [requireAuth, authorizeSpotOwner, validateCreateSpot], as
     } else {
         res.status(404)
         res.json({
-            message: "Spot couldn't be found"
+            message: 'Spot could not be found'
         });
     }
 }); 
 
 
+// DELETE A SPOT
+router.delete('/:spotId', [requireAuth, authorizeSpotOwner], async (req, res) => {
+    const spotId = req.params.spotId;
+    const toDeleteSpot = await Spot.findByPk(spotId); 
+
+    if (toDeleteSpot) {
+        toDeleteSpot.destroy(); 
+
+        res.json({
+            message: 'Successfully deleted'
+        });
+    } else {
+        res.status(404); 
+        res.json({
+            message: 'Spot could not be found'
+        }); 
+    }
+
+}); 
 
 
 
