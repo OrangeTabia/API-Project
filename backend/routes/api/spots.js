@@ -251,4 +251,8 @@ router.post('/', [requireAuth, validateCreateSpot], async (req, res) => {
 }); 
 
 
+
+// Add an image to a spot based on spot's id
+
+
 module.exports = router;
