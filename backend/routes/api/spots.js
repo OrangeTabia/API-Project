@@ -302,12 +302,14 @@ router.post('/:spotId/images', [requireAuth, authorizeSpotOwner], async (req, re
         }
         res.json(payload);
     } else {
+        res.status(404); 
         res.json({
             message: "Spot couldn't be found"
         }); 
     }
 });
 
+// Edit a spot
 
 
 
