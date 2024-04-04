@@ -9,7 +9,7 @@ const router = express.Router();
 
 
 // GET ALL OF THE CURRENT USER'S BOOKINGS
-router.get('/current', [requireAuth], async (req, res) => {
+router.get('/current', requireAuth, async (req, res) => {
     const { user } = req;
 
     const bookings = await Booking.findAll({
@@ -46,6 +46,9 @@ router.get('/current', [requireAuth], async (req, res) => {
         Bookings: formattedBookings
     }); 
 }); 
+
+
+
 
 
 

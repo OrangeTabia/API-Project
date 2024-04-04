@@ -1,6 +1,6 @@
 const express = require('express');
 const { Sequelize } = require('sequelize'); 
-const { Spot, User, Review, SpotImage } = require('../../db/models'); 
+const { Spot, User, Review, SpotImage, Booking } = require('../../db/models'); 
 const { Op } = require('sequelize'); 
 const { requireAuth } = require('../../utils/auth');
 const { check } = require('express-validator');
@@ -127,6 +127,59 @@ router.get('/current', requireAuth, async (req, res) => {
         Spots: formattedSpots
     }); 
 }); 
+
+
+// GET ALL BOOKINGS FOR A SPOT BASED ON THE SPOT'S ID   
+router.get('/:spotId/bookings', requireAuth, async (req, res) => {
+    const spotId = req.params.spotId;
+    const { user } = req; 
+    const spot = await Spot.findByPk(spotId); 
+
+    // Spot exists
+    if (spot) { 
+        // Owner Logic
+        if (user.id === spot.dataValues.ownerId) {
+            const ownerBookings = await Booking.findAll({
+                where: {
+                    spotId: spotId,
+                    userId: user.id
+                }, 
+                include: [
+                    {model: User, attributes: {
+                        exclude: ['email', 'hashedPassword', 'createdAt', 'updatedAt', 'username']
+                    }}
+                ]
+            }); 
+            res.json({
+                Bookings: ownerBookings
+            }); 
+        } 
+
+        // Guest Logic
+        else {
+            const guestBookings = await Booking.findAll({
+                where: {
+                    spotId: spotId,
+                }, 
+                attributes: {
+                    exclude: ['id', 'userId', 'createdAt', 'updatedAt']
+                }
+            }); 
+            res.json({
+                Bookings: guestBookings
+            }); 
+        }
+    }
+    // Spot does not exist
+    else {
+        res.status(404); 
+        res.json({
+            message: 'Spot could not be found'
+        }); 
+    }
+
+});
+
 
 // GET DETAILS OF A SPOT FROM AN ID
 router.get('/:spotId', async (req, res) => {
@@ -374,6 +427,8 @@ router.delete('/:spotId', [requireAuth, authorizeSpotOwner], async (req, res) =>
     }
 
 }); 
+
+
 
 
 
