@@ -232,9 +232,6 @@ const findBadBookings = function(bookings) {
 
         if ((startDate <= existingStart && endDate >= existingEnd) || 
             (startDate >= existingStart && endDate <= existingEnd)) {
-                console.log('both')
-                console.log("exisiting start date:", existingStart);
-                console.log("existing end date:", existingEnd);
 
                 err = new Error('Sorry, this spot is already booked for the specified dates');
                 err.status = 403; 
@@ -246,9 +243,6 @@ const findBadBookings = function(bookings) {
             }
 
         if (startDate >= existingStart && startDate < existingEnd) {
-            console.log('left')
-            console.log("exisiting start date:", existingStart);
-            console.log("existing end date:", existingEnd);
 
             err = new Error('Sorry, this spot is already booked for the specified dates');
             err.status = 403; 
@@ -259,9 +253,6 @@ const findBadBookings = function(bookings) {
         }
 
         if (endDate > existingStart && endDate <= existingEnd) {
-            console.log('right')
-            console.log("exisiting start date:", existingStart);
-            console.log("existing end date:", existingEnd);
 
             err = new Error('Sorry, this spot is already booked for the specified dates');
             err.status = 403;
@@ -381,6 +372,7 @@ router.get('/:spotId', async (req, res) => {
 });
 
 
+// TODO: Allow folks to put in a SINGLE attribute to update
 const validateCreateSpot = [
     check('address')
       .exists({ checkFalsy: true })
@@ -499,24 +491,11 @@ router.put('/:spotId', [requireAuth, validateCreateSpot], async (req, res) => {
             if (name !== undefined) spot.name = name;
             if (description !== undefined) spot.description = description;
             if (price !== undefined) spot.price = price;
-    
-            const { ownerId } = spot;
-    
+        
             await spot.save();
-    
-            res.json({
-                id: parseInt(spotId),
-                ownerId, 
-                address,
-                city,
-                state,
-                country,
-                lat,
-                lng,
-                name,
-                description,
-                price
-            });
+
+            res.json(spot);
+
         } else {
             res.status(403);
             res.json({
