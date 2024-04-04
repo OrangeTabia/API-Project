@@ -56,7 +56,8 @@ router.get('/', async (req, res) => {
             updatedAt,
             // Ensure we round to the nearest .5 with Math.floor
             avgRating: Math.floor(spotRating.dataValues.avgRating * 2) / 2,
-            previewImage: spot.SpotImages[0]?.url,
+            // Looks through the spotImages until it finds the one that is a preview
+            previewImage: spot.SpotImages.find((img) => img.preview )?.url
         }
     }))
 
@@ -116,7 +117,8 @@ router.get('/current', requireAuth, async (req, res) => {
             createdAt,
             updatedAt,
             avgRating: Math.floor(spotRating.dataValues.avgRating * 2) / 2,
-            previewImage: spot.SpotImages[0]?.url
+            // Looks through the spotImages until it finds the one that is a preview
+            previewImage: spot.SpotImages.find((img) => img.preview )?.url
         }
     }));
 
