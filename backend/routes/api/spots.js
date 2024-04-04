@@ -278,7 +278,7 @@ const findBadBookings = function(bookings) {
     const spot = await Spot.findByPk(spotId); 
 
     if (spot) {
-        // Check to see that it hasn't already been booked
+        // Finds all existing bookings based on the spotId
         const existingBookings = await Booking.findAll({
             where: {
                 spotId: spotId
@@ -437,37 +437,39 @@ router.post('/', [requireAuth, validateCreateSpot], async (req, res) => {
 }); 
 
 
-// Middleware for spot belonging to current user
-const authorizeSpotOwner = async (req, res, next) => {
-    const user = req.user;
+// // Middleware for spot belonging to current user
+// const authorizeSpotOwner = async (req, res, next) => {
+//     const user = req.user;
 
-    if (user) {
-        const spotId = req.params.spotId;
+//     if (user) {
+//         const spotId = req.params.spotId;
 
-        // See if there's a spot associated with the spotId param
-        const currentSpot = await Spot.findOne({
-            where: { 
-                // AND belongs to the user
-                id: spotId,
-                ownerId: user.id,
-            }
-        });
-        // Set it as a request attribute
-        req.spot = currentSpot; 
-        next();
+//         // See if there's a spot associated with the spotId param
+//         const currentSpot = await Spot.findOne({
+//             where: { 
+//                 // AND belongs to the user
+//                 id: spotId,
+//                 ownerId: user.id,
+//             }
+//         });
+//         // Set it as a request attribute
+//         req.spot = currentSpot; 
+//         next();
 
-    } else {
-        const err = new Error('Authorization required');
-        err.title = 'Authorization required';
-        err.erros = { message: 'Forbidden'}; 
-        err.status = 403;
-        return next(err); 
-    }
-}
+//     } else {
+//         const err = new Error('Authorization required');
+//         err.title = 'Authorization required';
+//         err.erros = { message: 'Forbidden'}; 
+//         err.status = 403;
+//         return next(err); 
+//     }
+// }
 
 
 // ADD AN IMAGE TO A SPOT BASED ON THE SPOT'S ID 
-router.post('/:spotId/images', [requireAuth, authorizeSpotOwner], async (req, res) => {
+router.post('/:spotId/images', [requireAuth], async (req, res) => {
+    const spotId = req.params.spotId;
+    
 
     // Pull the spot from the request middle ware
     const { spot } = req;
