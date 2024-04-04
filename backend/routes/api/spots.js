@@ -219,11 +219,10 @@ const validateBookingDates = async (req, res, next) => {
 
 // CREATE A BOOKING FROM A SPOT BASED ON THE SPOT'S ID
 router.post('/:spotId/bookings', [requireAuth, validateBookingDates], async (req, res, next) => {
-    // Grab the spotId, the user and payload information (dates)
-    const spotId = req.params.spotId;
-    const { user } = req;
     const { startDate, endDate } = req.body;
 
+
+//-------------------------HELPER FUNCTION-------------------------//
 // Helper function to find bad booking
 const findBadBookings = function(bookings) {
     // Itertate through all of the bookings
@@ -273,42 +272,48 @@ const findBadBookings = function(bookings) {
         }
     }; 
 }
+//-------------------------HELPER FUNCTION END-------------------------//
 
-    // Search for the spot
+
+    const spotId = req.params.spotId;
+    const { user } = req;
     const spot = await Spot.findByPk(spotId); 
 
     if (spot) {
-        // Finds all existing bookings based on the spotId
-        const existingBookings = await Booking.findAll({
-            where: {
-                spotId: spotId
-            }
-        });
-
-        // Helper function to determine if existing bookings are bad
-        error = findBadBookings(existingBookings);
-        if (error) {
-            res.status(403);
-            next(error);
-        } else {
-
-            // Otherwise, make the new booking
-            const newBooking = await Booking.create({
-                spotId: spotId, 
-                userId: user.id,
-                startDate,
-                endDate
+        if (user.id !== spot.dataValues.ownerId) {
+            
+            const existingBookings = await Booking.findAll({
+                where: {
+                    spotId: spotId
+                }
             }); 
-            res.json(newBooking);
+    
+            error = findBadBookings(existingBookings);
+            if (error) {
+                res.status(403);
+                next(error);
+            } else {
+                const newBooking = await Booking.create({
+                    spotId: spotId,
+                    userId: user.id,
+                    startDate,
+                    endDate
+                });
+                res.json(newBooking); 
+            }
+        } else {
+            res.status(400);
+            res.json({
+                message: 'Owner cannot create bookings'
+            });
         }
-        
-
     } else {
-        res.status(404); 
+        res.status(404);
         res.json({
             message: 'Spot could not be found'
-        });
+        }); 
     }
+
 }); 
 
 
@@ -437,60 +442,36 @@ router.post('/', [requireAuth, validateCreateSpot], async (req, res) => {
 }); 
 
 
-// // Middleware for spot belonging to current user
-// const authorizeSpotOwner = async (req, res, next) => {
-//     const user = req.user;
-
-//     if (user) {
-//         const spotId = req.params.spotId;
-
-//         // See if there's a spot associated with the spotId param
-//         const currentSpot = await Spot.findOne({
-//             where: { 
-//                 // AND belongs to the user
-//                 id: spotId,
-//                 ownerId: user.id,
-//             }
-//         });
-//         // Set it as a request attribute
-//         req.spot = currentSpot; 
-//         next();
-
-//     } else {
-//         const err = new Error('Authorization required');
-//         err.title = 'Authorization required';
-//         err.erros = { message: 'Forbidden'}; 
-//         err.status = 403;
-//         return next(err); 
-//     }
-// }
 
 
 // ADD AN IMAGE TO A SPOT BASED ON THE SPOT'S ID 
-router.post('/:spotId/images', [requireAuth], async (req, res) => {
+router.post('/:spotId/images', requireAuth, async (req, res) => {
     const spotId = req.params.spotId;
-    
-
-    // Pull the spot from the request middle ware
-    const { spot } = req;
-
-    // Pull out the request body
+    const { user } = req;
+    const spot = await Spot.findByPk(spotId); 
     const { url, preview } = req.body;
 
     if (spot) {
-        const newImage = await SpotImage.create({
-            spotId : spot.id,
-            url,
-            preview
-        });
-        // Grab the id
-        const { id } = newImage;
-
-        res.json({
-            id, 
-            url,
-            preview
-        });
+        if (user.id === spot.dataValues.ownerId) {
+            const newImage = await SpotImage.create({
+                spotId : spotId,
+                url,
+                preview
+            });
+            // Grab the id
+            const { id } = newImage;
+    
+            res.json({
+                id, 
+                url,
+                preview
+            });
+        } else {
+            res.status(403);
+            res.json({
+                message: 'Forbidden'
+            }); 
+        }
     } else {
         res.status(404); 
         res.json({
@@ -500,40 +481,48 @@ router.post('/:spotId/images', [requireAuth], async (req, res) => {
 });
 
 // EDIT A SPOT
-router.put('/:spotId', [requireAuth, authorizeSpotOwner, validateCreateSpot], async (req, res) => {
+router.put('/:spotId', [requireAuth, validateCreateSpot], async (req, res) => {
     const spotId = req.params.spotId;
-    const currentSpot = await Spot.findByPk(spotId); 
+    const spot = await Spot.findByPk(spotId); 
+    const { user } = req;
     
     const { address, city, state, country, lat, lng, name, description, price } = req.body;
 
-    if (currentSpot) {
-        if (address !== undefined) currentSpot.address = address;
-        if (city !== undefined) currentSpot.city = city;
-        if (state !== undefined) currentSpot.state = state;
-        if (country !== undefined) currentSpot.country = country;
-        if (lat !== undefined) currentSpot.lat = lat;
-        if (lng !== undefined) currentSpot.lng = lng;
-        if (name !== undefined) currentSpot.name = name;
-        if (description !== undefined) currentSpot.description = description;
-        if (price !== undefined) currentSpot.price = price;
-
-        const { ownerId } = currentSpot;
-
-        await currentSpot.save();
-
-        res.json({
-            id: parseInt(spotId),
-            ownerId, 
-            address,
-            city,
-            state,
-            country,
-            lat,
-            lng,
-            name,
-            description,
-            price
-        });
+    if (spot) {
+        if (user.id === spot.dataValues.ownerId) {
+            if (address !== undefined) spot.address = address;
+            if (city !== undefined) spot.city = city;
+            if (state !== undefined) spot.state = state;
+            if (country !== undefined) spot.country = country;
+            if (lat !== undefined) spot.lat = lat;
+            if (lng !== undefined) spot.lng = lng;
+            if (name !== undefined) spot.name = name;
+            if (description !== undefined) spot.description = description;
+            if (price !== undefined) spot.price = price;
+    
+            const { ownerId } = spot;
+    
+            await spot.save();
+    
+            res.json({
+                id: parseInt(spotId),
+                ownerId, 
+                address,
+                city,
+                state,
+                country,
+                lat,
+                lng,
+                name,
+                description,
+                price
+            });
+        } else {
+            res.status(403);
+            res.json({
+                message: 'Forbidden'
+            });
+        }
     } else {
         res.status(404);
         res.json({
@@ -544,25 +533,31 @@ router.put('/:spotId', [requireAuth, authorizeSpotOwner, validateCreateSpot], as
 
 
 // DELETE A SPOT
-router.delete('/:spotId', [requireAuth, authorizeSpotOwner], async (req, res) => {
+router.delete('/:spotId', requireAuth, async (req, res) => {
     const spotId = req.params.spotId;
     const toDeleteSpot = await Spot.findByPk(spotId); 
+    const { user } = req; 
 
     if (toDeleteSpot) {
-        toDeleteSpot.destroy(); 
+        if (user.id === toDeleteSpot.dataValues.ownerId) {
+            toDeleteSpot.destroy(); 
 
         res.json({
             message: 'Successfully deleted'
         });
+        } else {
+            res.status(403);
+            res.json({
+                message: 'Forbidden'
+            });
+        }
     } else {
         res.status(404); 
         res.json({
             message: 'Spot could not be found'
         }); 
     }
-
 }); 
-
 
 
 
