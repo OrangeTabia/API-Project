@@ -10,7 +10,7 @@ const { validateLogin } = require('../../utils/validation');
 const router = express.Router();
 
 
-// Log In a User
+// LOG IN A USER
 router.post(
     '/',
     validateLogin,
@@ -50,20 +50,10 @@ router.post(
         user: safeUser
       });
     }, 
-    // // Error handler for invalid credentials
-    // (err, req, res, next) => 
-    // {
-    //   // When there's a 401, we know that this is due to the credentials failing
-    //   if (err.status === 401) { 
-    //     res.status(401)
-    //     res.json({message: "Invalid credentials"})
-    //   }
-    //   next(err)
-    // }, 
   );
 
 
-// Log Out a User
+// LOG OUT A USER
 router.delete(
     '/',
     (_req, res) => {
@@ -73,7 +63,7 @@ router.delete(
   );
   
  
-// Restore session user
+// RESTORE SESSION USER
 router.get(
   '/',
   (req, res) => {

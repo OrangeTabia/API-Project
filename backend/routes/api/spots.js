@@ -194,6 +194,7 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
                     exclude: ['id', 'userId', 'createdAt', 'updatedAt']
                 }
             }); 
+
             res.json({
                 Bookings: guestBookings
             }); 
@@ -203,7 +204,7 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
     else {
         res.status(404); 
         res.json({
-            message: 'Spot could not be found'
+            message: `Spot with an id of ${spotId} could not be found`
         }); 
     }
 
@@ -319,18 +320,19 @@ const findBadBookings = function(bookings) {
                     startDate,
                     endDate
                 });
+                res.status(201);
                 res.json(newBooking); 
             }
         } else {
-            res.status(400);
+            res.status(403);
             res.json({
-                message: 'Owner cannot create bookings'
+                message: 'Forbidden'
             });
         }
     } else {
         res.status(404);
         res.json({
-            message: 'Spot could not be found'
+            message: `Spot with an id of ${spotId} could not be found`
         }); 
     }
 
@@ -449,7 +451,7 @@ router.get('/:spotId', async (req, res) => {
     } else {
         res.status(404); 
         res.json({
-            message: 'Spot could not be found'
+            message: `Spot with an id of ${spotId} could not be found`
         }); 
     }
 });
@@ -535,7 +537,8 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
             });
             // Grab the id
             const { id } = newImage;
-    
+            
+            res.status(201); 
             res.json({
                 id, 
                 url,
@@ -550,7 +553,7 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
     } else {
         res.status(404); 
         res.json({
-            message: 'Spot could not be found'
+            message: `Spot with an id of ${spotId} could not be found`
         }); 
     }
 });
@@ -588,7 +591,7 @@ router.put('/:spotId', [requireAuth, validateCreateSpot], async (req, res) => {
     } else {
         res.status(404);
         res.json({
-            message: 'Spot could not be found'
+            message: `Spot with an id of ${spotId} could not be found`
         });
     }
 }); 
@@ -616,7 +619,7 @@ router.delete('/:spotId', requireAuth, async (req, res) => {
     } else {
         res.status(404); 
         res.json({
-            message: 'Spot could not be found'
+            message: `Spot with and id of ${spotId} could not be found`
         }); 
     }
 }); 

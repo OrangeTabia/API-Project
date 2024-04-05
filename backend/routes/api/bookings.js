@@ -167,16 +167,16 @@ const findBadBookings = function(bookings) {
             }
 
         } else {
-            res.status(401);
+            res.status(403);
             res.json({
-                message: 'Unauthorized'
+                message: 'Forbidden'
             }); 
         }
 
     } else {
         res.status(404);
         res.json({
-            message: 'Booking could not be found'
+            message: `Booking with an id of ${bookingId} could not be found`
         });
     }
 
@@ -211,9 +211,9 @@ router.delete('/:bookingId', requireAuth, async (req, res) => {
             }
             
         } else {
-            res.status(401);
+            res.status(403);
             res.json({
-                message: 'Unauthorized'
+                message: 'Forbidden'
             });
         }
 

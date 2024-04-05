@@ -77,7 +77,7 @@ const checkUsername = async (req, res, next) => {
 }
 
 
-// Sign up
+// SIGN UP
 router.post(
     '/',
     validateSignup,

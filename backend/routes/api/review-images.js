@@ -1,17 +1,17 @@
 const express = require('express');
-const { SpotImage } = require('../../db/models'); 
+const { ReviewImage } = require('../../db/models'); 
 const { requireAuth } = require('../../utils/auth');
 const router = express.Router();
 
 
-// DELETE A SPOT IMAGE
+// DELETE A REVIEW IMAGE
 router.delete('/:imageId', requireAuth, async (req, res) => {
     const imageId = req.params.imageId;
+    const image = await ReviewImage.findByPk(imageId); 
     const { user } = req;
-    const image = await SpotImage.findByPk(imageId); 
 
     if (image) {
-        if (user.id === image.dataValues.spotId) {
+        if (user.id === image.dataValues.reviewId) {
 
             image.destroy();
 
@@ -23,16 +23,16 @@ router.delete('/:imageId', requireAuth, async (req, res) => {
             res.status(403);
             res.json({
                 message: 'Forbidden'
-            }); 
+            });
         }
 
     } else {
         res.status(404);
         res.json({
-            message: `Spot Image with an id of ${imageId} could not be found`
+            message: `Review Image with an id of ${imageId} could not be found`
         }); 
     }
-}); 
+});
 
 
 module.exports = router;
