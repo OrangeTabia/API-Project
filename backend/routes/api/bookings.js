@@ -162,7 +162,7 @@ const findBadBookings = function(bookings) {
             } else {
                 res.status(403);
                 res.json({
-                    message: 'Past bookings can not be modified'
+                    message: 'Past bookings cannot be modified'
                 }); 
             }
 
@@ -183,7 +183,47 @@ const findBadBookings = function(bookings) {
 });
 
 
+// DELETE A BOOKING
+router.delete('/:bookingId', requireAuth, async (req, res) => {
+    const bookingId = req.params.bookingId;
+    const { user } = req;
+    const booking = await Booking.findByPk(bookingId, {
+        include: [
+            {model: Spot}
+        ]
+    }); 
 
+    if (booking) {
+        if (user.id === booking.dataValues.userId || user.id === Spot.ownerId) {
+            const date = new Date();
+            if (booking > date.toISOString()) {
+
+                booking.destroy();
+                res.json({
+                    message: 'Successfully deleted'
+                });
+
+            } else {
+                res.status(403);
+                res.json({
+                    message: 'Bookings that have been started cannot be deleted'
+                }); 
+            }
+            
+        } else {
+            res.status(401);
+            res.json({
+                message: 'Unauthorized'
+            });
+        }
+
+    } else {
+        res.status(404);
+        res.json({
+            message: `Booking with id of ${bookingId} could not be found`
+        }); 
+    }
+});
 
 
 
