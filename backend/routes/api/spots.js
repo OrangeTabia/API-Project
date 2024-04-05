@@ -8,8 +8,62 @@ const { handleValidationErrors } = require('../../utils/validation');
 const router = express.Router();
 
 
+// Middleware to validate query parameters
+const validateQueryParams = [
+    check('page')
+      .exists({ checkFalsy: true })
+      .isInt({ min: 1, max: 10})
+      .withMessage('Page must be greater than or equal to 1'),
+    check('size')
+      .exists({ checkFalsy: true })
+      .isInt({ min: 1, max: 20 })
+      .withMessage('Size must be greater than or equal to 1'),
+    check('minLat')
+      .optional({ checkFalsy: true })
+      .isFloat({ min: -90 })
+      .withMessage('Minimum latitude is invalid'),
+    check('maxLat')
+      .isFloat({ max: 90 })
+      .withMessage('Maximum latitude or invalid'),
+    check('minLng')
+      .isFloat({ min: -180 })
+      .withMessage('Minimum longitude is invalid'),
+    check('maxLng')
+      .isFloat({ max: 180 })
+      .withMessage('Maximum longitude is invalid'),
+    check('minPrice')
+      .isInt({ min: 0 })
+      .withMessage('Minimum price must be greater than or equal to 0'),
+    check('maxPrice')
+      .isInt({ min: 0 })
+      .withMessage('Maximum price must be greater than or equal to 0'),
+    handleValidationErrors
+  ]; 
+
+
 // GET ALL SPOTS
-router.get('/', async (req, res) => {
+router.get('/', validateQueryParams, async (req, res) => {
+
+    const { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
+
+    const pagination = {}; 
+
+    page = parseInt(page);
+    size = parseInt(size); 
+    minLat = parseInt(minLat); 
+    maxLat = parseInt(maxLat); 
+    minLng = parseInt(minLng); 
+    maxLng = parseInt(maxLng); 
+    minPrice = parseInt(minPrice); 
+    maxPrice = parseInt(maxPrice); 
+
+    if (!page || (Number.isNaN(page)) || page < 1) page = 1;
+    if (!size || (Number.isNaN(size)) || size < 1) size = 20;
+
+
+    pagination.limit = size;
+    pagination.offset = size * (page - 1); 
+
 
     const allSpots = await Spot.findAll({
         include: [
@@ -57,12 +111,15 @@ router.get('/', async (req, res) => {
             // Ensure we round to the nearest .5 with Math.floor
             avgRating: Math.floor(spotRating.dataValues.avgRating * 2) / 2,
             // Looks through the spotImages until it finds the one that is a preview
-            previewImage: spot.SpotImages.find((img) => img.preview )?.url
+            previewImage: spot.SpotImages.find((img) => img.preview )?.url, 
+            ...pagination
         }
     }))
 
     res.json({
-        Spots: formattedSpots
+        Spots: formattedSpots, 
+        page, 
+        size
     }); 
 }); 
 
