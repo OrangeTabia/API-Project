@@ -43,7 +43,63 @@ router.get('/current', requireAuth, async (req, res) => {
     }); 
 });
 
+// ADD IMAGE TO REVIEW BASED ON REVIEW ID
+router.post('/:reviewId/images', requireAuth, async (req, res) => {
+    const reviewId = req.params.reviewId;
+    const { user } = req; 
+    const { url } = req.body; 
+    const review = await Review.findByPk(reviewId);
+    const existingImages = await ReviewImage.findAll({
+        where: {
+            reviewId
+        }
+    }); 
+    
+    // Review must exist
+    if (review) {
+        // Review must belong to this user
+        if (user.id === review.dataValues.userId) {
+            console.log("HERES MY LENGTH: ", existingImages.length)
+            // Review must not be at the limit for content
+            if (existingImages.length < 10) {
 
+                const newImage = await ReviewImage.create({
+                    url,
+                    reviewId
+                }); 
+
+                await newImage.save();
+
+                res.json({
+                    id: newImage.id, 
+                    url
+                });
+
+            } else {
+                res.status(403);
+                res.json({
+                    message: 'Maximum number of images for this resource was reached'
+                }); 
+            }
+
+        } else {
+            res.status(400); 
+            res.json({
+                message: 'Unauthorized'
+            }); 
+        }
+
+    } else {
+        res.status(404);
+        res.json({
+            message: `Review with an id of ${reviewId} could not be found`
+        }); 
+    }
+
+
+
+
+});
 
 
 module.exports = router;
