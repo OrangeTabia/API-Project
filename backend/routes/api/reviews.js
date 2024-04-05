@@ -1,11 +1,10 @@
 const express = require('express');
-const { Sequelize } = require('sequelize'); 
-const { Spot, User, Review, SpotImage, Booking, ReviewImage } = require('../../db/models'); 
-const { Op } = require('sequelize'); 
+const { Spot, User, Review, SpotImage, ReviewImage } = require('../../db/models'); 
 const { requireAuth } = require('../../utils/auth');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const router = express.Router();
+
 
 // GET ALL REVIEWS OF THE CURRENT USER
 router.get('/current', requireAuth, async (req, res) => {
@@ -59,7 +58,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res) => {
     if (review) {
         // Review must belong to this user
         if (user.id === review.dataValues.userId) {
-            console.log("HERES MY LENGTH: ", existingImages.length)
+
             // Review must not be at the limit for content
             if (existingImages.length < 10) {
 
@@ -70,6 +69,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res) => {
 
                 await newImage.save();
 
+                res.status(201); 
                 res.json({
                     id: newImage.id, 
                     url
@@ -83,9 +83,9 @@ router.post('/:reviewId/images', requireAuth, async (req, res) => {
             }
 
         } else {
-            res.status(400); 
+            res.status(403); 
             res.json({
-                message: 'Unauthorized'
+                message: 'Forbidden'
             }); 
         }
 
@@ -130,9 +130,9 @@ router.put('/:reviewId', [requireAuth, validateEditReview], async (req, res) => 
             res.json(editedReview); 
 
         } else {
-            res.status(400);
+            res.status(403);
             res.json({
-                message: 'Unauthorized'
+                message: 'Forbidden'
             }); 
         }
     } else {
@@ -158,9 +158,9 @@ router.delete('/:reviewId', requireAuth, async (req, res) => {
             }); 
             
         } else {
-            res.status(400); 
+            res.status(403); 
             res.json({
-                message: 'Unauthorized'
+                message: 'Forbidden'
             }); 
         }
     } else {
