@@ -336,7 +336,7 @@ const findBadBookings = function(bookings) {
 
 }); 
 
-// body validation error middleware handler 
+// Middleware to handle body validation errors to creating a spot
 const validateCreateReview = [
   check('review')
     .exists({ checkFalsy: true })

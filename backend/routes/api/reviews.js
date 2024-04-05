@@ -95,11 +95,55 @@ router.post('/:reviewId/images', requireAuth, async (req, res) => {
             message: `Review with an id of ${reviewId} could not be found`
         }); 
     }
-
-
-
-
 });
+
+
+// Middleware to handle body validation errors to editing reviews
+const validateEditReview = [
+    check('review')
+      .exists({ checkFalsy: true })
+      .withMessage('Review text is required'),
+    check('stars')
+      .exists({ checkFalsy: true })
+      .isInt({ min: 1, max: 5 })
+      .withMessage('Stars must be an integer from 1 to 5'),
+    handleValidationErrors
+  ]; 
+
+
+// EDIT A REVIEW
+router.put('/:reviewId', [requireAuth, validateEditReview], async (req, res) => {
+
+    const reviewId = req.params.reviewId;
+    const editedReview = await Review.findByPk(reviewId); 
+    const { user } = req;
+    const { review, stars } = req.body;
+
+    if (editedReview) {
+        if (user.id === editedReview.dataValues.userId) {
+
+            editedReview.review = review;
+            editedReview.stars = stars;
+
+            await editedReview.save();
+
+            res.json(editedReview); 
+
+        } else {
+            res.status(400);
+            res.json({
+                message: 'Unauthorized'
+            }); 
+        }
+    } else {
+        res.status(404); 
+        res.json({
+            message: `Review with an id of ${reviewId} could not be found`
+        }); 
+    }
+});
+
+//
 
 
 module.exports = router;
