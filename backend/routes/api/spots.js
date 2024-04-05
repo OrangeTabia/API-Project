@@ -1,6 +1,6 @@
 const express = require('express');
 const { Sequelize } = require('sequelize'); 
-const { Spot, User, Review, SpotImage, Booking } = require('../../db/models'); 
+const { Spot, User, Review, SpotImage, Booking, ReviewImage } = require('../../db/models'); 
 const { Op } = require('sequelize'); 
 const { requireAuth } = require('../../utils/auth');
 const { check } = require('express-validator');
@@ -127,6 +127,35 @@ router.get('/current', requireAuth, async (req, res) => {
         Spots: formattedSpots
     }); 
 }); 
+
+
+// GET ALL REVIEWS BY A SPOT'S ID
+router.get('/:spotId/reviews', async (req, res) => {
+    const spotId = req.params.spotId;
+    const spot = await Spot.findByPk(spotId);
+
+    if (spot) {
+        const reviews = await Review.findAll({
+            where: {
+                spotId: spotId
+            }, 
+            include: [
+                {model: User, attributes: ['id', 'firstName', 'lastName']},
+                {model: ReviewImage, attributes: ['id', 'url']}
+            ]
+        }); 
+
+        res.json({
+            Reviews: reviews
+        });
+        
+    } else {
+        res.status(401);
+        res.json({
+            message: `Spot with an id of ${spotId} could not be found`
+        });
+    }
+});
 
 
 // GET ALL BOOKINGS FOR A SPOT BASED ON THE SPOT'S ID   
@@ -263,7 +292,7 @@ const findBadBookings = function(bookings) {
         }
     }; 
 }
-//-------------------------HELPER FUNCTION END-------------------------//
+//-------------------------HELPER FUNCTION END------------------------//
 
 
     const spotId = req.params.spotId;
@@ -307,6 +336,60 @@ const findBadBookings = function(bookings) {
 
 }); 
 
+// Middleware to handle body validation errors to creating a spot
+const validateCreateReview = [
+  check('review')
+    .exists({ checkFalsy: true })
+    .withMessage('Review text is required'),
+  check('stars')
+    .exists({ checkFalsy: true })
+    .isInt({ min: 1, max: 5 })
+    .withMessage('Stars must be an integer from 1 to 5'),
+  handleValidationErrors
+]; 
+
+// CREATE A REVIEW FOR A SPOT BASED ON THE SPOT'S ID   
+router.post('/:spotId/reviews', [requireAuth, validateCreateReview], async (req, res) => {
+    const spotId = req.params.spotId;
+    const { user } = req; 
+    const { review, stars } = req.body;
+
+    // Find any existing reviews
+    const existingReview = await Review.findOne({
+        where: { 
+            spotId: spotId,
+            userId: user.id,
+        }
+    })
+
+    // If they've already reviewed it, return an error
+    if (existingReview) {
+        res.status(500);
+        res.json({
+            message: 'User already has a review for this spot'
+        }); 
+    } else {
+        // Otherwise, if they have a spot, make the review
+        const spot = await Spot.findByPk(spotId); 
+
+        if (spot) {
+            const newReview = await Review.create({
+                userId: user.id,
+                spotId: spotId,
+                review,
+                stars
+            });
+            res.status(201); 
+            res.json(newReview); 
+            // If the spot doesn't exist, return a 404
+        } else {
+            res.status(404);
+            res.json({
+                message: `Spot with an id of ${spotId} could not be found`
+            }); 
+        }
+    }
+});
 
 
 // GET DETAILS OF A SPOT FROM AN ID
