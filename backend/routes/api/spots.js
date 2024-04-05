@@ -1,6 +1,6 @@
 const express = require('express');
 const { Sequelize } = require('sequelize'); 
-const { Spot, User, Review, SpotImage, Booking } = require('../../db/models'); 
+const { Spot, User, Review, SpotImage, Booking, ReviewImage } = require('../../db/models'); 
 const { Op } = require('sequelize'); 
 const { requireAuth } = require('../../utils/auth');
 const { check } = require('express-validator');
@@ -127,6 +127,35 @@ router.get('/current', requireAuth, async (req, res) => {
         Spots: formattedSpots
     }); 
 }); 
+
+
+// GET ALL REVIEWS BY A SPOT'S ID
+router.get('/:spotId/reviews', async (req, res) => {
+    const spotId = req.params.spotId;
+    const spot = await Spot.findByPk(spotId);
+
+    if (spot) {
+        const reviews = await Review.findAll({
+            where: {
+                spotId: spotId
+            }, 
+            include: [
+                {model: User, attributes: ['id', 'firstName', 'lastName']},
+                {model: ReviewImage, attributes: ['id', 'url']}
+            ]
+        }); 
+
+        res.json({
+            Reviews: reviews
+        });
+        
+    } else {
+        res.status(401);
+        res.json({
+            message: `Spot with an id of ${spotId} could not be found`
+        });
+    }
+});
 
 
 // GET ALL BOOKINGS FOR A SPOT BASED ON THE SPOT'S ID   

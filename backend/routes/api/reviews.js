@@ -44,8 +44,6 @@ router.get('/current', requireAuth, async (req, res) => {
 });
 
 
-// GET ALL REVIEWS BY A SPOT'S ID
-
 
 
 module.exports = router;
