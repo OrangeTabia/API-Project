@@ -23,18 +23,23 @@ const validateQueryParams = [
       .isFloat({ min: -90 })
       .withMessage('Minimum latitude is invalid'),
     check('maxLat')
+      .optional({ checkFalsy: true })
       .isFloat({ max: 90 })
       .withMessage('Maximum latitude or invalid'),
     check('minLng')
+      .optional({ checkFalsy: true })
       .isFloat({ min: -180 })
       .withMessage('Minimum longitude is invalid'),
     check('maxLng')
+      .optional({ checkFalsy: true })
       .isFloat({ max: 180 })
       .withMessage('Maximum longitude is invalid'),
     check('minPrice')
+      .optional({ checkFalsy: true })
       .isInt({ min: 0 })
       .withMessage('Minimum price must be greater than or equal to 0'),
     check('maxPrice')
+      .optional({ checkFalsy: true })
       .isInt({ min: 0 })
       .withMessage('Maximum price must be greater than or equal to 0'),
     handleValidationErrors
@@ -44,7 +49,7 @@ const validateQueryParams = [
 // GET ALL SPOTS
 router.get('/', validateQueryParams, async (req, res) => {
 
-    const { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
+    let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
 
     const pagination = {}; 
 
@@ -60,15 +65,17 @@ router.get('/', validateQueryParams, async (req, res) => {
     if (!page || (Number.isNaN(page)) || page < 1) page = 1;
     if (!size || (Number.isNaN(size)) || size < 1) size = 20;
 
-
-    pagination.limit = size;
-    pagination.offset = size * (page - 1); 
+    if (page > 0 && page <= 10 && size > 0 && size <= 20) {
+        pagination.limit = size;
+        pagination.offset = size * (page - 1); 
+    }
 
 
     const allSpots = await Spot.findAll({
         include: [
             {model: SpotImage, attributes: ['url']}
-        ]
+        ],
+        ...pagination
     }); 
 
     let formattedSpots =  await Promise.all(allSpots.map(async (spot) => { 
@@ -112,7 +119,6 @@ router.get('/', validateQueryParams, async (req, res) => {
             avgRating: Math.floor(spotRating.dataValues.avgRating * 2) / 2,
             // Looks through the spotImages until it finds the one that is a preview
             previewImage: spot.SpotImages.find((img) => img.preview )?.url, 
-            ...pagination
         }
     }))
 
