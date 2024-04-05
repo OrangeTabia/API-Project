@@ -24,7 +24,7 @@ const validateSignup = [
   check('email')
     .exists({ checkFalsy: true })
     .isEmail()
-    .withMessage('Please provide a valid email.'),
+    .withMessage('Invalid email'),
   check('username')
     .exists({ checkFalsy: true })
     .isLength({ min: 4 })
@@ -48,7 +48,8 @@ const checkEmail = async (req, res, next) => {
   }); 
 
   if (existing) {
-    res.status(500).json({
+    res.status(500);
+    return res.json({
       message: 'User already exists',
       errors: {
         email: 'User with that email already exists' 
@@ -66,7 +67,8 @@ const checkUsername = async (req, res, next) => {
   }); 
 
   if (existing) {
-    res.status(500).json({
+    res.status(500);
+    return res.json({
       message: 'User already exists',
       errors: {
         username: 'User with that username already exists' 
@@ -80,9 +82,9 @@ const checkUsername = async (req, res, next) => {
 // SIGN UP
 router.post(
     '/',
-    validateSignup,
-    checkEmail,
+    [validateSignup,
     checkUsername,
+    checkEmail], 
     async (req, res) => {
       const { firstName, lastName, email, password, username } = req.body;
       const hashedPassword = bcrypt.hashSync(password);
