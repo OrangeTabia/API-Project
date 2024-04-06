@@ -86,7 +86,7 @@ router.get('/', validateQueryParams, async (req, res) => {
             attributes: {
                 include: [
                     [
-                        Sequelize.fn("AVG", Sequelize.col("Reviews.stars")), 
+                        Sequelize.fn("AVG", Sequelize.col("stars")), 
                         "avgRating"
                     ],
                     
@@ -149,21 +149,19 @@ router.get('/current', requireAuth, async (req, res) => {
 
         const {id, ownerId, address, city, state, country, lat, lng, name, description, price, createdAt, updatedAt } = spot; 
 
-        const spotRating = await Spot.findOne({
+        const spotRating = await Review.findOne({
             where: {
-                id: spot.id,
+                spotId: spot.id,
             },
             attributes: {
                 include: [
                     [
-                        Sequelize.fn("AVG", Sequelize.col("Reviews.stars")), 
+                        Sequelize.fn("AVG", Sequelize.col("stars")), 
                         "avgRating"
                     ],
+                    
                 ],
-            },
-            include: [
-                {model: Review, attributes: ['stars']}
-            ]
+            }
         });
 
         const spotImg = await SpotImage.findOne({
@@ -491,25 +489,24 @@ router.get('/:spotId', async (req, res) => {
     if (spot) {
         const {id, ownerId, address, city, state, country, lat, lng, name, description, price, createdAt, updatedAt } = spot;
 
-        const spotRating = await Spot.findOne({
+
+        const spotRating = await Review.findOne({
             where: {
-                id: spot.id,
+                spotId: spot.id,
             },
             attributes: {
                 include: [
                     [
-                        Sequelize.fn("AVG", Sequelize.col("Reviews.stars")), 
+                        Sequelize.fn("AVG", Sequelize.col("stars")), 
                         "avgRating"
                     ],
                     [
-                        Sequelize.fn("COUNT", Sequelize.col("Reviews.stars")), 
+                        Sequelize.fn("COUNT", Sequelize.col("stars")), 
                         "numReviews"
                     ]
+                    
                 ],
-            },
-            include: [
-                {model: Review, attributes: ['stars']}, 
-            ]
+            }
         });
 
         // Find our trimmed down images
