@@ -85,6 +85,7 @@ router.get('/', validateQueryParams, async (req, res) => {
             },
             attributes: {
                 include: [
+                    'spotId',
                     [
                         Sequelize.fn("AVG", Sequelize.col("stars")), 
                         "avgRating"
@@ -156,6 +157,7 @@ router.get('/current', requireAuth, async (req, res) => {
             },
             attributes: {
                 include: [
+                    'spotId',
                     [
                         Sequelize.fn("AVG", Sequelize.col("stars")), 
                         "avgRating"
@@ -498,7 +500,8 @@ router.get('/:spotId', async (req, res) => {
             },
             attributes: {
                 include: [
-                    [
+                    'spotId',
+                    [   
                         Sequelize.fn("AVG", Sequelize.col("stars")), 
                         "avgRating"
                     ],
