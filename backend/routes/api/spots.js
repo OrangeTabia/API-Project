@@ -91,10 +91,7 @@ router.get('/', validateQueryParams, async (req, res) => {
                     ],
                     
                 ],
-            },
-            include: [
-                {model: Review, attributes: ['stars']},
-            ]
+            }
         });
 
         // Now grab the SpotImage that is the primary image for the spot
