@@ -30,7 +30,8 @@ router.get('/current', requireAuth, async (req, res) => {
         let currentSpot = await Spot.findOne({
             where: {
                 id: book.spotId
-            }
+            }, 
+            attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price']
         });
 
         return {
