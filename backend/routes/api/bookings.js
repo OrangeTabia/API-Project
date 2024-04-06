@@ -27,7 +27,11 @@ router.get('/current', requireAuth, async (req, res) => {
             }
         }); 
         // Then find the spot itself 
-        let currentSpot = await Spot.findByPk(book.spotId);
+        let currentSpot = await Spot.findOne({
+            where: {
+                id: book.spotId
+            }
+        });
 
         return {
             ...book.dataValues,

@@ -11,7 +11,15 @@ router.delete('/:imageId', requireAuth, async (req, res) => {
     const image = await SpotImage.findByPk(imageId); 
 
     if (image) {
-        if (user.id === image.dataValues.spotId) {
+        // Let's query a spot that has the spotId (from image) and the owner! 
+        const spot = await SpotImage.findOne({
+            where: {
+                id: image.spotId,
+                ownerId: user.id,
+            }
+        })
+        // If this is correct, you're the owner and can destroy
+        if (spot) {
 
             image.destroy();
 
