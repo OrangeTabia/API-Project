@@ -205,11 +205,7 @@ const findBadBookings = function(bookings) {
 router.delete('/:bookingId', requireAuth, async (req, res) => {
     const bookingId = req.params.bookingId;
     const { user } = req;
-    const booking = await Booking.findByPk(bookingId, {
-        include: [
-            {model: Spot}
-        ]
-    }); 
+    const booking = await Booking.findByPk(bookingId); 
 
     if (booking) {
         if (user.id === booking.dataValues.userId || user.id === Spot.ownerId) {

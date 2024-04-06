@@ -218,6 +218,7 @@ router.get('/:spotId/reviews', async (req, res) => {
                 {model: ReviewImage, attributes: ['id', 'url']}
             ]
         }); 
+        // TODO: Consider getting rid of the above eager loading
 
         res.json({
             Reviews: reviews
@@ -242,6 +243,7 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
     if (spot) { 
         // Owner Logic
         if (user.id === spot.dataValues.ownerId) {
+            // TODO: Consider editing the eager load here
             const ownerBookings = await Booking.findAll({
                 where: {
                     spotId: spotId,
@@ -487,12 +489,7 @@ router.post('/:spotId/reviews', [requireAuth, validateCreateReview], async (req,
 // GET DETAILS OF A SPOT FROM AN ID
 router.get('/:spotId', async (req, res) => {
     const spotId = req.params.spotId;
-    const spot = await Spot.findByPk(spotId, { 
-        include: [
-            {model: SpotImage, attributes: ['id', 'url', 'preview']},
-            {model: User, attributes: ['id', 'firstName', 'lastName']},
-        ]
-    }); 
+    const spot = await Spot.findByPk(spotId); 
 
     if (spot) {
         const {id, ownerId, address, city, state, country, lat, lng, name, description, price, createdAt, updatedAt } = spot;
@@ -518,6 +515,19 @@ router.get('/:spotId', async (req, res) => {
             ]
         });
 
+        // Find our trimmed down images
+        let currentImages = await SpotImage.findAll({
+            where: {
+                spotId: spot.id,
+            },
+            attributes: ['id', 'url', 'preview']
+        })
+
+        // Find our user 
+        let currentUser = await User.findByPk(ownerId, {
+            attributes: ['id', 'firstName', 'lastName']
+        })
+
         const payload = {
             id, 
             ownerId,
@@ -534,8 +544,8 @@ router.get('/:spotId', async (req, res) => {
             updatedAt,
             numReviews: spotRating.dataValues.numReviews,
             avgStarRating: Math.floor(spotRating.dataValues.avgRating * 2) / 2,
-            SpotImages: spot.SpotImages,
-            Owner: spot.User
+            SpotImages: currentImages,
+            Owner: currentUser
         }
         res.json(payload); 
     } else {
