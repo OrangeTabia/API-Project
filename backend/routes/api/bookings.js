@@ -36,10 +36,10 @@ router.get('/current', requireAuth, async (req, res) => {
         return {
             ...book.dataValues,
             // Hanlde the case where theres a null value
-            Spot: currentSpot ? {
-                ...currentSpot.dataValues,
+            Spot: {
+                ...currentSpot?.dataValues,
                 previewImage: previewImage?.url
-            } : null
+            }
         }
     })); 
 

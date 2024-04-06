@@ -1,5 +1,5 @@
 const express = require('express');
-const { SpotImage } = require('../../db/models'); 
+const { SpotImage, Spot } = require('../../db/models'); 
 const { requireAuth } = require('../../utils/auth');
 const router = express.Router();
 
@@ -12,7 +12,7 @@ router.delete('/:imageId', requireAuth, async (req, res) => {
 
     if (image) {
         // Let's query a spot that has the spotId (from image) and the owner! 
-        const spot = await SpotImage.findOne({
+        const spot = await Spot.findOne({
             where: {
                 id: image.spotId,
                 ownerId: user.id,
