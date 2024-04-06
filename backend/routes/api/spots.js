@@ -103,7 +103,7 @@ router.get('/', validateQueryParams, async (req, res) => {
         }); 
 
         // Now calculate the average rating
-        let avgRating 
+        let avgRating = 0;
         if (spotRating) { 
             avgRating = Math.floor(spotRating.dataValues.avgRating * 2) / 2
         }
@@ -177,7 +177,7 @@ router.get('/current', requireAuth, async (req, res) => {
         });
         
         // Now calculate the average rating
-        let avgRating 
+        let avgRating = 0;
         if (spotRating) { 
             avgRating = Math.floor(spotRating.dataValues.avgRating * 2) / 2
         }
@@ -522,7 +522,7 @@ router.get('/:spotId', async (req, res) => {
 
 
         // Now calculate the average rating + numRatings
-        let avgRating 
+        let avgRating= 0;
         let numReviews = 0;
         if (spotRating) { 
             avgRating = Math.floor(spotRating.dataValues.avgRating * 2) / 2
