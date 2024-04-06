@@ -91,7 +91,8 @@ router.get('/', validateQueryParams, async (req, res) => {
                     ],
                     
                 ],
-            }
+            },
+            group: ['spotId']
         });
 
         // Now grab the SpotImage that is the primary image for the spot
@@ -161,7 +162,8 @@ router.get('/current', requireAuth, async (req, res) => {
                     ],
                     
                 ],
-            }
+            },
+            group: ['spotId']
         });
 
         const spotImg = await SpotImage.findOne({
@@ -506,7 +508,8 @@ router.get('/:spotId', async (req, res) => {
                     ]
                     
                 ],
-            }
+            },
+            group: ['spotId']
         });
 
         // Find our trimmed down images
