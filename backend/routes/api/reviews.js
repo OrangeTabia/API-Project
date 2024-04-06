@@ -22,17 +22,26 @@ router.get('/current', requireAuth, async (req, res) => {
                 preview: true
             }
         }); 
-        const currentSpot = await Spot.findByPk(review.spotId);
+        const currentSpot = await Spot.findByPk(review.spotId, {
+            attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price']
+        });
         const currentReviewImages = await ReviewImage.findAll({
             where: {
                 reviewId: review.id
-            }
-        })
+            }, 
+            attributes: ['id', 'url']
+        }); 
+
         return {
             ...review.dataValues, 
             Spot: {
                 ...currentSpot.dataValues, 
                 previewImage: firstImage?.url
+            },
+            User: {
+                id: user.id, 
+                firstName: user.firstName,
+                lastName: user.lastName
             },
             ReviewImages: currentReviewImages
         }
