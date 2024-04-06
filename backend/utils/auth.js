@@ -37,6 +37,8 @@ const setTokenCookie = (res, user) => {
     // token parsed from cookies
     const { token } = req.cookies;
     req.user = null;
+
+    console.log("HERES MY TOKEN: ", token)
   
     return jwt.verify(token, secret, null, async (err, jwtPayload) => {
       if (err) {
@@ -54,6 +56,8 @@ const setTokenCookie = (res, user) => {
         res.clearCookie('token');
         return next();
       }
+
+      console.log("HERES MY CURRENT USER ", req.user?.id)
   
       if (!req.user) res.clearCookie('token');
   
@@ -66,6 +70,8 @@ const setTokenCookie = (res, user) => {
 // If there is no current user, return an error
 const requireAuth = function (req, _res, next) {
     if (req.user) return next();
+
+    console.log("MY AUTH FAILED");
   
     const err = new Error('Authentication required');
     err.title = 'Authentication required';
