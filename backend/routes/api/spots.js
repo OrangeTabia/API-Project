@@ -11,11 +11,11 @@ const router = express.Router();
 // Middleware to validate query parameters
 const validateQueryParams = [
     check('page')
-      .exists({ checkFalsy: true })
+      .optional({ checkFalsy: true })
       .isInt({ min: 1, max: 10})
       .withMessage('Page must be greater than or equal to 1'),
     check('size')
-      .exists({ checkFalsy: true })
+      .optional({ checkFalsy: true })
       .isInt({ min: 1, max: 20 })
       .withMessage('Size must be greater than or equal to 1'),
     check('minLat')
@@ -72,11 +72,10 @@ router.get('/', validateQueryParams, async (req, res) => {
 
 
     const allSpots = await Spot.findAll({
-        include: [
-            {model: SpotImage, attributes: ['url']}
-        ],
+
         ...pagination
     }); 
+
 
     let formattedSpots =  await Promise.all(allSpots.map(async (spot) => { 
         // This is for the aggregated query over the average stars 
@@ -94,9 +93,18 @@ router.get('/', validateQueryParams, async (req, res) => {
                 ],
             },
             include: [
-                {model: Review, attributes: ['stars']}
+                {model: Review, attributes: ['stars']},
             ]
         });
+
+        // Now grab the SpotImage that is the primary image for the spot
+        const spotImg = await SpotImage.findOne({
+            where: {
+                spotId: spot.id,
+                preview: true    
+            },
+        }); 
+
 
         // Unpack attributes
         const {id, ownerId, address, city, country, lat, lng, name, description, price, createdAt, updatedAt} = spot;
@@ -114,14 +122,13 @@ router.get('/', validateQueryParams, async (req, res) => {
             description,
             price,
             createdAt,
-            updatedAt,
+            updatedAt: updatedAt.toISOString(),
             // Ensure we round to the nearest .5 with Math.floor
             avgRating: Math.floor(spotRating.dataValues.avgRating * 2) / 2,
-            // Looks through the spotImages until it finds the one that is a preview
-            previewImage: spot.SpotImages.find((img) => img.preview )?.url, 
+            previewImage: spotImg.url
         }
     }))
-
+    
     res.json({
         Spots: formattedSpots, 
         page, 
@@ -137,10 +144,7 @@ router.get('/current', requireAuth, async (req, res) => {
     const currentUserSpots = await Spot.findAll({
         where: {
             ownerId: user.id
-        }, 
-        include: [
-            {model: SpotImage, attributes: ['url']},
-        ],
+        }
     }); 
 
     let formattedSpots =  await Promise.all(currentUserSpots.map(async (spot) => {
@@ -157,13 +161,20 @@ router.get('/current', requireAuth, async (req, res) => {
                         Sequelize.fn("AVG", Sequelize.col("Reviews.stars")), 
                         "avgRating"
                     ],
-                    
                 ],
             },
             include: [
                 {model: Review, attributes: ['stars']}
             ]
         });
+
+        const spotImg = await SpotImage.findOne({
+            where: {
+                spotId: spot.id,
+                preview: true    
+            },
+        }); 
+
 
         return {
             id, 
@@ -180,8 +191,7 @@ router.get('/current', requireAuth, async (req, res) => {
             createdAt,
             updatedAt,
             avgRating: Math.floor(spotRating.dataValues.avgRating * 2) / 2,
-            // Looks through the spotImages until it finds the one that is a preview
-            previewImage: spot.SpotImages.find((img) => img.preview )?.url
+            previewImage: spotImg.url
         }
     }));
 
@@ -213,7 +223,7 @@ router.get('/:spotId/reviews', async (req, res) => {
         });
         
     } else {
-        res.status(401);
+        res.status(404);
         res.json({
             message: `Spot with an id of ${spotId} could not be found`
         });
@@ -570,8 +580,8 @@ router.post('/', [requireAuth, validateCreateSpot], async (req, res) => {
         city,
         state,
         country,
-        lat,
-        lng,
+        lat: parseInt(lat),
+        lng: parseInt(lng),
         name,
         description,
         price

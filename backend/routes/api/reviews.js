@@ -69,7 +69,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res) => {
 
                 await newImage.save();
 
-                res.status(201); 
+                res.status(200); 
                 res.json({
                     id: newImage.id, 
                     url
