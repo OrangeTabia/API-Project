@@ -83,16 +83,14 @@ router.get('/', validateQueryParams, async (req, res) => {
             where: {
                 spotId: spot.id,
             },
-            attributes: {
-                include: [
-                    'spotId',
-                    [
-                        Sequelize.fn("AVG", Sequelize.col("stars")), 
-                        "avgRating"
-                    ],
-                    
+            attributes: [
+                'spotId',
+                [
+                    Sequelize.fn("AVG", Sequelize.col("stars")), 
+                    "avgRating"
                 ],
-            },
+                
+            ],
             group: ['spotId']
         });
 
@@ -155,16 +153,14 @@ router.get('/current', requireAuth, async (req, res) => {
             where: {
                 spotId: spot.id,
             },
-            attributes: {
-                include: [
-                    'spotId',
-                    [
-                        Sequelize.fn("AVG", Sequelize.col("stars")), 
-                        "avgRating"
-                    ],
-                    
+            attributes: [
+                'spotId',
+                [
+                    Sequelize.fn("AVG", Sequelize.col("stars")), 
+                    "avgRating"
                 ],
-            },
+                
+            ],
             group: ['spotId']
         });
 
@@ -498,20 +494,18 @@ router.get('/:spotId', async (req, res) => {
             where: {
                 spotId: spot.id,
             },
-            attributes: {
-                include: [
-                    'spotId',
-                    [   
-                        Sequelize.fn("AVG", Sequelize.col("stars")), 
-                        "avgRating"
-                    ],
-                    [
-                        Sequelize.fn("COUNT", Sequelize.col("stars")), 
-                        "numReviews"
-                    ]
-                    
+            attributes: [
+                'spotId',
+                [   
+                    Sequelize.fn("AVG", Sequelize.col("stars")), 
+                    "avgRating"
                 ],
-            },
+                [
+                    Sequelize.fn("COUNT", Sequelize.col("stars")), 
+                    "numReviews"
+                ]
+                
+            ],
             group: ['spotId']
         });
 
