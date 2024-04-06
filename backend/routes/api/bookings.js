@@ -15,14 +15,7 @@ router.get('/current', requireAuth, async (req, res) => {
     const bookings = await Booking.findAll({
         where: {
             userId: user.id
-        },
-        include: [
-            {model: Spot, 
-                attributes: {
-                exclude: ['description', 'updatedAt', 'createdAt']
-                }, 
-            }, 
-        ]
+        }
     });
 
     let formattedBookings = await Promise.all(bookings.map(async (book) => {
