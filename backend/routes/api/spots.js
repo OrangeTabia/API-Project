@@ -102,6 +102,12 @@ router.get('/', validateQueryParams, async (req, res) => {
             },
         }); 
 
+        // Now calculate the average rating
+        let avgRating 
+        if (spotRating) { 
+            avgRating = Math.floor(spotRating.dataValues.avgRating * 2) / 2
+        }
+
 
 
         // Unpack attributes
@@ -121,9 +127,8 @@ router.get('/', validateQueryParams, async (req, res) => {
             price,
             createdAt,
             updatedAt: updatedAt.toISOString(),
-            // Ensure we round to the nearest .5 with Math.floor
-            avgRating: Math.floor(spotRating.dataValues.avgRating * 2) / 2,
-            previewImage: spotImg.url
+            avgRating,
+            previewImage: spotImg?.url
         }
     }))
     
@@ -151,7 +156,7 @@ router.get('/current', requireAuth, async (req, res) => {
 
         const spotRating = await Review.findOne({
             where: {
-                spotId: spot.id,
+                spotId: id,
             },
             attributes: [
                 'spotId',
@@ -169,7 +174,13 @@ router.get('/current', requireAuth, async (req, res) => {
                 spotId: spot.id,
                 preview: true    
             },
-        }); 
+        });
+        
+        // Now calculate the average rating
+        let avgRating 
+        if (spotRating) { 
+            avgRating = Math.floor(spotRating.dataValues.avgRating * 2) / 2
+        }
 
 
         return {
@@ -186,8 +197,8 @@ router.get('/current', requireAuth, async (req, res) => {
             price,
             createdAt,
             updatedAt,
-            avgRating: Math.floor(spotRating.dataValues.avgRating * 2) / 2,
-            previewImage: spotImg.url
+            avgRating,
+            previewImage: spotImg?.url
         }
     }));
 
@@ -509,6 +520,15 @@ router.get('/:spotId', async (req, res) => {
             group: ['spotId']
         });
 
+
+        // Now calculate the average rating + numRatings
+        let avgRating 
+        let numReviews = 0;
+        if (spotRating) { 
+            avgRating = Math.floor(spotRating.dataValues.avgRating * 2) / 2
+            numReviews = spotRating.dataValues.numReviews
+        }        
+
         // Find our trimmed down images
         let currentImages = await SpotImage.findAll({
             where: {
@@ -536,8 +556,8 @@ router.get('/:spotId', async (req, res) => {
             price,
             createdAt,
             updatedAt,
-            numReviews: spotRating.dataValues.numReviews,
-            avgStarRating: Math.floor(spotRating.dataValues.avgRating * 2) / 2,
+            numReviews,
+            avgRating,
             SpotImages: currentImages,
             Owner: currentUser
         }
