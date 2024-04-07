@@ -347,10 +347,10 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
 
             let formattedBookings = await Promise.all(guestBookings.map(async (booking) => {
                   // Format dates for ownerBookings
-            let createdAt = guestBookings.dataValues.createdAt; 
+            let createdAt = booking.dataValues.createdAt; 
             let formattedCreatedAt = createdAt.toISOString().split(".")[0].replace('T', ' '); 
         
-            let updatedAt = guestBookings.dataValues.updatedAt;
+            let updatedAt = booking.dataValues.updatedAt;
             let formattedUpdatedAt = updatedAt.toISOString().split(".")[0].replace('T', ' '); 
 
                 return {
