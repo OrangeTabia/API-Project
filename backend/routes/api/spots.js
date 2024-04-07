@@ -312,8 +312,6 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
                     attributes: ['id', 'firstName', 'lastName']
                 }); 
 
-                console.log()
-
                 // Format dates for ownerBookings
                 let createdAt = booking.dataValues.createdAt; 
                 let formattedCreatedAt = createdAt.toISOString().split(".")[0].replace('T', ' '); 
@@ -345,25 +343,23 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
                 attributes: ['spotId', 'startDate', 'endDate']
             }); 
 
-            let formattedBookings = await Promise.all(guestBookings.map(async (booking) => {
-                  // Format dates for ownerBookings
-            let createdAt = booking.dataValues.createdAt; 
-            let formattedCreatedAt = createdAt.toISOString().split(".")[0].replace('T', ' '); 
-        
-            let updatedAt = booking.dataValues.updatedAt;
-            let formattedUpdatedAt = updatedAt.toISOString().split(".")[0].replace('T', ' '); 
+            // let formattedBookings = await Promise.all(guestBookings.map(async (booking) => {
+            //     let createdAt = booking.dataValues.createdAt; 
+            //     let formattedCreatedAt = createdAt ? createdAt.toISOString().split(".")[0].replace('T', ' ') : null; 
+            //     let updatedAt = booking.dataValues.updatedAt;
+            //     let formattedUpdatedAt = updatedAt ?  updatedAt.toISOString().split(".")[0].replace('T', ' ') : null; 
 
-                return {
-                    ...booking.dataValues,
-                    createdAt: formattedCreatedAt, 
-                    updatedAt: formattedUpdatedAt
-                }
-            }));
+            //     console.log("HERES MY GUEST BOOKING: ", booking);
+
+            //         return {
+            //             ...booking.dataValues,
+            //             createdAt: formattedCreatedAt, 
+            //             updatedAt: formattedUpdatedAt
+            //         }
+            // }));
 
     
-            res.json({
-                Bookings: formattedBookings
-            }); 
+            res.json(guestBookings); 
         }
     }
     // Spot does not exist
