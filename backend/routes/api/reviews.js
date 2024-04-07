@@ -32,10 +32,27 @@ router.get('/current', requireAuth, async (req, res) => {
             attributes: ['id', 'url']
         }); 
 
+
+        // Format dates
+        let createdAt = review.dataValues.createdAt; 
+        let formattedCreatedAt = createdAt.toISOString().split(".")[0].replace('T', ' '); 
+    
+    
+        let updatedAt = review.dataValues.updatedAt;
+        let formattedUpdatedAt = updatedAt.toISOString().split(".")[0].replace('T', ' '); 
+
+        // Format lat and lng
+        let lat = currentSpot.dataValues.lat;
+        let lng = currentSpot.dataValues.lng;
+
         return {
             ...review.dataValues, 
+            createdAt: formattedCreatedAt,
+            updatedAt: formattedUpdatedAt,
             Spot: {
                 ...currentSpot.dataValues, 
+                lat: parseFloat(lat),
+                lng: parseFloat(lng),
                 previewImage: firstImage?.url
             },
             User: {
@@ -137,7 +154,20 @@ router.put('/:reviewId', [requireAuth, validateEditReview], async (req, res) => 
 
             await editedReview.save();
 
-            res.json(editedReview); 
+
+            let createdAt = editedReview.dataValues.createdAt; 
+            let formattedCreatedAt = createdAt.toISOString().split(".")[0].replace('T', ' '); 
+        
+        
+            let updatedAt = editedReview.dataValues.updatedAt;
+            let formattedUpdatedAt = updatedAt.toISOString().split(".")[0].replace('T', ' '); 
+            
+
+            res.json({
+                ...editedReview.dataValues,
+                createdAt: formattedCreatedAt,
+                updatedAt: formattedUpdatedAt
+            }); 
 
         } else {
             res.status(403);

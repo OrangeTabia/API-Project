@@ -241,8 +241,21 @@ router.get('/:spotId/reviews', async (req, res) => {
         }); 
         // TODO: Consider getting rid of the above eager loading
 
+
+    // Format dates
+    let createdAt = reviews[0].dataValues.createdAt; 
+    let formattedCreatedAt = createdAt.toISOString().split(".")[0].replace('T', ' '); 
+
+
+    let updatedAt = reviews[0].dataValues.updatedAt;
+    let formattedUpdatedAt = updatedAt.toISOString().split(".")[0].replace('T', ' '); 
+
         res.json({
-            Reviews: reviews
+            Reviews: {
+                ...reviews,
+                createdAt: formattedCreatedAt,
+                updatedAt: formattedUpdatedAt
+            },
         });
         
     } else {
@@ -475,7 +488,7 @@ router.post('/:spotId/reviews', [requireAuth, validateCreateReview], async (req,
             spotId: spotId,
             userId: user.id,
         }
-    })
+    }); 
 
     // If they've already reviewed it, return an error
     if (existingReview) {
@@ -494,8 +507,23 @@ router.post('/:spotId/reviews', [requireAuth, validateCreateReview], async (req,
                 review,
                 stars
             });
+
+
+            //Format dates
+            let createdAt = newReview.dataValues.createdAt; 
+            let formattedCreatedAt = createdAt.toISOString().split(".")[0].replace('T', ' '); 
+        
+        
+            let updatedAt = newReview.dataValues.updatedAt;
+            let formattedUpdatedAt = updatedAt.toISOString().split(".")[0].replace('T', ' '); 
+
+
             res.status(201); 
-            res.json(newReview); 
+            res.json({
+                ...newReview.dataValues,
+                createdAt: formattedCreatedAt,
+                updatedAt: formattedUpdatedAt
+            }); 
             // If the spot doesn't exist, return a 404
         } else {
             res.status(404);
