@@ -234,29 +234,48 @@ router.get('/:spotId/reviews', async (req, res) => {
         const reviews = await Review.findAll({
             where: {
                 spotId: spotId
-            }, 
-            include: [
-                {model: User, attributes: ['id', 'firstName', 'lastName']},
-                {model: ReviewImage, attributes: ['id', 'url']}
-            ]
+            }
         }); 
-        // TODO: Consider getting rid of the above eager loading
 
 
-    // Format dates
-    let createdAt = reviews[0].dataValues.createdAt; 
-    let formattedCreatedAt = createdAt.toISOString().split(".")[0].replace('T', ' '); 
+        let formattedReviews = await Promise.all(reviews.map(async (review) => {
+            const reviewImages = await ReviewImage.findAll({
+                where: {
+                    reviewId: review.id 
+                },
+                attributes: ['id', 'url']
+            });
 
+            const currentUser = await User.findOne({
+                where: {
+                    id: spotId
+                },
+                attributes: ['id', 'firstName', 'lastName']
+            });
+    
+    
+            // Format dates
+            let createdAt = reviews[0].dataValues.createdAt; 
+            let formattedCreatedAt = createdAt.toISOString().split(".")[0].replace('T', ' '); 
+    
+    
+            let updatedAt = reviews[0].dataValues.updatedAt;
+            let formattedUpdatedAt = updatedAt.toISOString().split(".")[0].replace('T', ' '); 
 
-    let updatedAt = reviews[0].dataValues.updatedAt;
-    let formattedUpdatedAt = updatedAt.toISOString().split(".")[0].replace('T', ' '); 
+            return {
+                ...review.dataValues,
+                createdAt: formattedCreatedAt,
+                updatedAt: formattedUpdatedAt, 
+                User: {
+                    ...currentUser.dataValues
+                }, 
+                ReviewImages: reviewImages
+            }
+        }));
+
 
         res.json({
-            Reviews: {
-                ...reviews,
-                createdAt: formattedCreatedAt,
-                updatedAt: formattedUpdatedAt
-            },
+            Reviews: formattedReviews
         });
         
     } else {
