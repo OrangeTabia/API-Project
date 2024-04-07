@@ -4,7 +4,7 @@ const { Spot, User, Review, SpotImage, Booking, ReviewImage } = require('../../d
 const { Op } = require('sequelize'); 
 const { requireAuth } = require('../../utils/auth');
 const { check } = require('express-validator');
-const { handleValidationErrors } = require('../../utils/validation');
+const { handleValidationErrors, validateLogin } = require('../../utils/validation');
 const router = express.Router();
 
 
@@ -72,7 +72,6 @@ router.get('/', validateQueryParams, async (req, res) => {
 
 
     const allSpots = await Spot.findAll({
-
         ...pagination
     }); 
 
@@ -111,22 +110,29 @@ router.get('/', validateQueryParams, async (req, res) => {
 
 
         // Unpack attributes
-        const {id, ownerId, address, city, country, lat, lng, name, description, price, createdAt, updatedAt} = spot;
+        const {id, ownerId, address, city, country, lat, lng, name, description, price} = spot;
 
-        // TODO: Serialize attributes in a more concise way
+        // Formats the date
+        let findCreatedAt = spot.dataValues.createdAt; 
+        let formattedCreatedAt = findCreatedAt.toISOString().split(".")[0].replace('T', ' '); 
+    
+    
+        let findUpdatedAt = spot.dataValues.updatedAt;
+        let formattedUpdatedAt = findUpdatedAt.toISOString().split(".")[0].replace('T', ' '); 
+
         return {
             id,
             ownerId,
             address,
             city,
             country,
-            lat,
-            lng,
+            lat: parseFloat(lat),
+            lng: parseFloat(lng),
             name,
             description,
             price,
-            createdAt,
-            updatedAt: updatedAt.toISOString(),
+            createdAt: formattedCreatedAt,
+            updatedAt: formattedUpdatedAt,
             avgRating,
             previewImage: spotImg?.url
         }
@@ -152,7 +158,7 @@ router.get('/current', requireAuth, async (req, res) => {
 
     let formattedSpots =  await Promise.all(currentUserSpots.map(async (spot) => {
 
-        const {id, ownerId, address, city, state, country, lat, lng, name, description, price, createdAt, updatedAt } = spot; 
+        const {id, ownerId, address, city, state, country, lat, lng, name, description, price } = spot; 
 
         const spotRating = await Review.findOne({
             where: {
@@ -183,6 +189,15 @@ router.get('/current', requireAuth, async (req, res) => {
         }
 
 
+        // Formats the date
+        let findCreatedAt = spot.dataValues.createdAt; 
+        let formattedCreatedAt = findCreatedAt.toISOString().split(".")[0].replace('T', ' '); 
+    
+    
+        let findUpdatedAt = spot.dataValues.updatedAt;
+        let formattedUpdatedAt = findUpdatedAt.toISOString().split(".")[0].replace('T', ' '); 
+
+
         return {
             id, 
             ownerId, 
@@ -190,13 +205,13 @@ router.get('/current', requireAuth, async (req, res) => {
             city,
             state, 
             country,
-            lat,
-            lng,
+            lat: parseFloat(lat),
+            lng: parseFloat(lng),
             name,
             description,
             price,
-            createdAt,
-            updatedAt,
+            createdAt: formattedCreatedAt,
+            updatedAt: formattedUpdatedAt,
             avgRating,
             previewImage: spotImg?.url
         }
@@ -498,7 +513,7 @@ router.get('/:spotId', async (req, res) => {
     const spot = await Spot.findByPk(spotId); 
 
     if (spot) {
-        const {id, ownerId, address, city, state, country, lat, lng, name, description, price, createdAt, updatedAt } = spot;
+        const {id, ownerId, address, city, state, country, lat, lng, name, description, price } = spot;
 
 
         const spotRating = await Review.findOne({
@@ -535,12 +550,22 @@ router.get('/:spotId', async (req, res) => {
                 spotId: spot.id,
             },
             attributes: ['id', 'url', 'preview']
-        })
+        });
 
         // Find our user 
         let currentUser = await User.findByPk(ownerId, {
             attributes: ['id', 'firstName', 'lastName']
-        })
+        });
+
+
+        // Format dates
+        let findCreatedAt = spot.dataValues.createdAt; 
+        let formattedCreatedAt = findCreatedAt.toISOString().split(".")[0].replace('T', ' '); 
+    
+    
+        let findUpdatedAt = spot.dataValues.updatedAt;
+        let formattedUpdatedAt = findUpdatedAt.toISOString().split(".")[0].replace('T', ' '); 
+
 
         const payload = {
             id, 
@@ -549,13 +574,13 @@ router.get('/:spotId', async (req, res) => {
             city,
             state,
             country,
-            lat,
-            lng,
+            lat: parseFloat(lat),
+            lng: parseFloat(lng),
             name,
             description,
             price,
-            createdAt,
-            updatedAt,
+            createdAt: formattedCreatedAt,
+            updatedAt: formattedUpdatedAt,
             numReviews,
             avgRating,
             SpotImages: currentImages,
@@ -610,7 +635,7 @@ const validateCreateSpot = [
 
 // CREATE A SPOT
 router.post('/', [requireAuth, validateCreateSpot], async (req, res) => {
-    const {address, city, state, country, lat, lng, name, description, price} = req.body; 
+    const {address, city, state, country, lat, lng, name, description, price } = req.body; 
 
     // Grab the user from the request 
     const { user } = req;
@@ -621,15 +646,29 @@ router.post('/', [requireAuth, validateCreateSpot], async (req, res) => {
         city,
         state,
         country,
-        lat: parseInt(lat),
-        lng: parseInt(lng),
+        lat,
+        lng,
         name,
         description,
-        price
+        price,
     }); 
 
+    // Format dates
+    let createdAt = newSpot.dataValues.createdAt; 
+    let formattedCreatedAt = createdAt.toISOString().split(".")[0].replace('T', ' '); 
+
+
+    let updatedAt = newSpot.dataValues.updatedAt;
+    let formattedUpdatedAt = updatedAt.toISOString().split(".")[0].replace('T', ' '); 
+
     res.status(201);
-    res.json(newSpot); 
+    res.json({
+        ...newSpot.dataValues, 
+        lat: parseFloat(lat),
+        lng: parseFloat(lng),
+        createdAt: formattedCreatedAt,
+        updatedAt: formattedUpdatedAt
+    }); 
 }); 
 
 
@@ -694,7 +733,21 @@ router.put('/:spotId', [requireAuth, validateCreateSpot], async (req, res) => {
         
             await spot.save();
 
-            res.json(spot);
+            // Format dates
+            let createdAt = spot.dataValues.createdAt; 
+            let formattedCreatedAt = createdAt.toISOString().split(".")[0].replace('T', ' '); 
+        
+        
+            let updatedAt = spot.dataValues.updatedAt;
+            let formattedUpdatedAt = updatedAt.toISOString().split(".")[0].replace('T', ' '); 
+
+            res.json({
+                ...spot.dataValues, 
+                lat: parseFloat(lat),
+                lng: parseFloat(lng),
+                createdAt: formattedCreatedAt,
+                updatedAt: formattedUpdatedAt
+            });
 
         } else {
             res.status(403);

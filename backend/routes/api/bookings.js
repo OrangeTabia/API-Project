@@ -17,6 +17,16 @@ router.get('/current', requireAuth, async (req, res) => {
             userId: user.id
         }
     });
+    
+
+    // Format dates
+    let createdAt = bookings[0].dataValues.createdAt; 
+    let formattedCreatedAt = createdAt.toISOString().split(".")[0].replace('T', ' '); 
+
+
+    let updatedAt = bookings[0].dataValues.updatedAt;
+    let formattedUpdatedAt = updatedAt.toISOString().split(".")[0].replace('T', ' '); 
+
 
     let formattedBookings = await Promise.all(bookings.map(async (book) => {
         // Find the preview image
@@ -36,12 +46,15 @@ router.get('/current', requireAuth, async (req, res) => {
 
         return {
             ...book.dataValues,
+            createdAt: formattedCreatedAt,
+            updatedAt: formattedUpdatedAt,
             // Hanlde the case where theres a null value
             Spot: {
                 ...currentSpot?.dataValues,
                 previewImage: previewImage?.url
             }
         }
+
     })); 
 
     res.json({
