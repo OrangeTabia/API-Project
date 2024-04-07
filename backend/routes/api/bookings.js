@@ -19,14 +19,6 @@ router.get('/current', requireAuth, async (req, res) => {
     });
     
 
-    // Format dates
-    let createdAt = bookings[0].dataValues.createdAt; 
-    let formattedCreatedAt = createdAt.toISOString().split(".")[0].replace('T', ' '); 
-
-
-    let updatedAt = bookings[0].dataValues.updatedAt;
-    let formattedUpdatedAt = updatedAt.toISOString().split(".")[0].replace('T', ' '); 
-
 
     let formattedBookings = await Promise.all(bookings.map(async (book) => {
         // Find the preview image
@@ -43,6 +35,14 @@ router.get('/current', requireAuth, async (req, res) => {
             }, 
             attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price']
         });
+
+            // Format dates
+            let createdAt = book.dataValues.createdAt; 
+            let formattedCreatedAt = createdAt.toISOString().split(".")[0].replace('T', ' '); 
+
+
+            let updatedAt = book.dataValues.updatedAt;
+            let formattedUpdatedAt = updatedAt.toISOString().split(".")[0].replace('T', ' '); 
 
             // Format lat and lng
             let lat = currentSpot.dataValues.lat;
