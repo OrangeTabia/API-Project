@@ -44,6 +44,10 @@ router.get('/current', requireAuth, async (req, res) => {
             attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price']
         });
 
+            // Format lat and lng
+            let lat = currentSpot.dataValues.lat;
+            let lng = currentSpot.dataValues.lng;
+
         return {
             ...book.dataValues,
             createdAt: formattedCreatedAt,
@@ -51,6 +55,8 @@ router.get('/current', requireAuth, async (req, res) => {
             // Hanlde the case where theres a null value
             Spot: {
                 ...currentSpot?.dataValues,
+                lat: parseFloat(lat),
+                lng: parseFloat(lng),
                 previewImage: previewImage?.url
             }
         }
