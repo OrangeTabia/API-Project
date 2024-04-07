@@ -303,29 +303,35 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
                     spotId: spotId,
                     userId: user.id
                 }, 
-                // include: [
-                //     {model: User, attributes: {
-                //         exclude: ['email', 'hashedPassword', 'createdAt', 'updatedAt', 'username']
-                //     }}
-                // ]
             }); 
 
-            console.log("OWNER BOOKING", ownerBookings); 
+            let formattedBookings = await Promise.all(ownerBookings.map(async (booking) => {
+                const currentOwner = await User.findOne({
+                    where: {
+                        id: booking.userId
+                    },
+                    attributes: ['id', 'firstName', 'lastName']
+                }); 
 
-            // Format dates for ownerBookings
-            let createdAt = ownerBookings.dataValues.createdAt; 
-            let formattedCreatedAt = createdAt.toISOString().split(".")[0].replace('T', ' '); 
+                // Format dates for ownerBookings
+                let createdAt = booking.dataValues.createdAt; 
+                let formattedCreatedAt = createdAt.toISOString().split(".")[0].replace('T', ' '); 
         
         
-            let updatedAt = ownerBookings.dataValues.updatedAt;
-            let formattedUpdatedAt = updatedAt.toISOString().split(".")[0].replace('T', ' '); 
+                let updatedAt = booking.dataValues.updatedAt;
+                let formattedUpdatedAt = updatedAt.toISOString().split(".")[0].replace('T', ' '); 
 
-            res.json({
-                Bookings: {
-                    ...ownerBookings.dataValues,
+                return {
+                    User: currentOwner,
+                    ...booking.dataValues,
                     createdAt: formattedCreatedAt,
                     updatedAt: formattedUpdatedAt
                 }
+            })); 
+
+
+            res.json({
+                Bookings: formattedBookings
             }); 
         } 
 
@@ -335,9 +341,7 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
                 where: {
                     spotId: spotId,
                 }, 
-                attributes: {
-                    exclude: ['id', 'userId', 'createdAt', 'updatedAt']
-                }
+                attributes: ['spotId', 'startDate', 'endDate']
             }); 
 
             // Format dates for ownerBookings
