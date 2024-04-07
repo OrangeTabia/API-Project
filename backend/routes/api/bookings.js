@@ -192,7 +192,18 @@ const findBadBookings = function(bookings) {
 
                     await booking.save();
 
-                    res.json(booking); 
+                    let createdAt = booking.dataValues.createdAt; 
+                    let formattedCreatedAt = createdAt.toISOString().split(".")[0].replace('T', ' '); 
+    
+    
+                    let updatedAt = booking.dataValues.updatedAt;
+                    let formattedUpdatedAt = updatedAt.toISOString().split(".")[0].replace('T', ' '); 
+
+                    res.json({
+                        ...booking.dataValues,
+                        createdAt: formattedCreatedAt,
+                        updatedAt: formattedUpdatedAt
+                    }); 
 
                 }
 

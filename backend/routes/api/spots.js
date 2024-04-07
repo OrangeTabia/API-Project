@@ -5,6 +5,7 @@ const { Op } = require('sequelize');
 const { requireAuth } = require('../../utils/auth');
 const { check } = require('express-validator');
 const { handleValidationErrors, validateLogin } = require('../../utils/validation');
+const { format } = require('sequelize/lib/utils');
 const router = express.Router();
 
 
@@ -283,14 +284,29 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
                     spotId: spotId,
                     userId: user.id
                 }, 
-                include: [
-                    {model: User, attributes: {
-                        exclude: ['email', 'hashedPassword', 'createdAt', 'updatedAt', 'username']
-                    }}
-                ]
+                // include: [
+                //     {model: User, attributes: {
+                //         exclude: ['email', 'hashedPassword', 'createdAt', 'updatedAt', 'username']
+                //     }}
+                // ]
             }); 
+
+            console.log("OWNER BOOKING", ownerBookings); 
+
+            // Format dates for ownerBookings
+            let createdAt = ownerBookings.dataValues.createdAt; 
+            let formattedCreatedAt = createdAt.toISOString().split(".")[0].replace('T', ' '); 
+        
+        
+            let updatedAt = ownerBookings.dataValues.updatedAt;
+            let formattedUpdatedAt = updatedAt.toISOString().split(".")[0].replace('T', ' '); 
+
             res.json({
-                Bookings: ownerBookings
+                Bookings: {
+                    ...ownerBookings.dataValues,
+                    createdAt: formattedCreatedAt,
+                    updatedAt: formattedUpdatedAt
+                }
             }); 
         } 
 
@@ -305,8 +321,20 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
                 }
             }); 
 
+            // Format dates for ownerBookings
+            let createdAt = guestBookings.dataValues.createdAt; 
+            let formattedCreatedAt = createdAt.toISOString().split(".")[0].replace('T', ' '); 
+        
+        
+            let updatedAt = guestBookings.dataValues.updatedAt;
+            let formattedUpdatedAt = updatedAt.toISOString().split(".")[0].replace('T', ' '); 
+
             res.json({
-                Bookings: guestBookings
+                Bookings: {
+                    ...guestBookings.dataValues,
+                    createdAt: formattedCreatedAt, 
+                    updatedAt: formattedUpdatedAt
+                }
             }); 
         }
     }
@@ -446,8 +474,21 @@ const findBadBookings = function(bookings) {
                     startDate,
                     endDate
                 });
+
+                // Format dates
+                let createdAt = newBooking.dataValues.createdAt; 
+                let formattedCreatedAt = createdAt.toISOString().split(".")[0].replace('T', ' '); 
+
+
+                let updatedAt = newBooking.dataValues.updatedAt;
+                let formattedUpdatedAt = updatedAt.toISOString().split(".")[0].replace('T', ' '); 
+
                 res.status(201);
-                res.json(newBooking); 
+                res.json({
+                    ...newBooking.dataValues,
+                    createdAt: formattedCreatedAt,
+                    updatedAt: formattedUpdatedAt
+                }); 
             }
         } else {
             res.status(403);
