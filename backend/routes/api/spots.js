@@ -297,7 +297,6 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
     if (spot) { 
         // Owner Logic
         if (user.id === spot.dataValues.ownerId) {
-            // TODO: Consider editing the eager load here
             const ownerBookings = await Booking.findAll({
                 where: {
                     spotId: spotId,
@@ -305,13 +304,15 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
                 }, 
             }); 
 
-            let formattedBookings = await Promise.all(ownerBookings.map(async (booking) => {
+            let ownerFormattedBookings = await Promise.all(ownerBookings.map(async (booking) => {
                 const currentOwner = await User.findOne({
                     where: {
                         id: booking.userId
                     },
                     attributes: ['id', 'firstName', 'lastName']
                 }); 
+
+                console.log()
 
                 // Format dates for ownerBookings
                 let createdAt = booking.dataValues.createdAt; 
@@ -331,7 +332,7 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
 
 
             res.json({
-                Bookings: formattedBookings
+                Bookings: ownerFormattedBookings
             }); 
         } 
 
@@ -344,20 +345,24 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
                 attributes: ['spotId', 'startDate', 'endDate']
             }); 
 
-            // Format dates for ownerBookings
+            let formattedBookings = await Promise.all(guestBookings.map(async (booking) => {
+                  // Format dates for ownerBookings
             let createdAt = guestBookings.dataValues.createdAt; 
             let formattedCreatedAt = createdAt.toISOString().split(".")[0].replace('T', ' '); 
-        
         
             let updatedAt = guestBookings.dataValues.updatedAt;
             let formattedUpdatedAt = updatedAt.toISOString().split(".")[0].replace('T', ' '); 
 
-            res.json({
-                Bookings: {
-                    ...guestBookings.dataValues,
+                return {
+                    ...booking.dataValues,
                     createdAt: formattedCreatedAt, 
                     updatedAt: formattedUpdatedAt
                 }
+            }));
+
+    
+            res.json({
+                Bookings: formattedBookings
             }); 
         }
     }
