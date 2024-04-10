@@ -126,6 +126,7 @@ router.get('/', validateQueryParams, async (req, res) => {
             ownerId,
             address,
             city,
+            state,
             country,
             lat: parseFloat(lat),
             lng: parseFloat(lng),
@@ -135,7 +136,7 @@ router.get('/', validateQueryParams, async (req, res) => {
             createdAt: formattedCreatedAt,
             updatedAt: formattedUpdatedAt,
             avgRating,
-            previewImage: spotImg?.url
+            previewImage: spotImg.url
         }
     }))
     
@@ -214,7 +215,7 @@ router.get('/current', requireAuth, async (req, res) => {
             createdAt: formattedCreatedAt,
             updatedAt: formattedUpdatedAt,
             avgRating,
-            previewImage: spotImg?.url
+            previewImage: spotImg.url
         }
     }));
 
@@ -342,22 +343,6 @@ router.get('/:spotId/bookings', requireAuth, async (req, res) => {
                 }, 
                 attributes: ['spotId', 'startDate', 'endDate']
             }); 
-
-            // let formattedBookings = await Promise.all(guestBookings.map(async (booking) => {
-            //     let createdAt = booking.dataValues.createdAt; 
-            //     let formattedCreatedAt = createdAt ? createdAt.toISOString().split(".")[0].replace('T', ' ') : null; 
-            //     let updatedAt = booking.dataValues.updatedAt;
-            //     let formattedUpdatedAt = updatedAt ?  updatedAt.toISOString().split(".")[0].replace('T', ' ') : null; 
-
-            //     console.log("HERES MY GUEST BOOKING: ", booking);
-
-            //         return {
-            //             ...booking.dataValues,
-            //             createdAt: formattedCreatedAt, 
-            //             updatedAt: formattedUpdatedAt
-            //         }
-            // }));
-
     
             res.json(guestBookings); 
         }
