@@ -111,7 +111,7 @@ router.get('/', validateQueryParams, async (req, res) => {
 
 
         // Unpack attributes
-        const {id, ownerId, address, city, country, lat, lng, name, description, price} = spot;
+        const {id, ownerId, address, city, state, country, lat, lng, name, description, price} = spot;
 
         // Formats the date
         let findCreatedAt = spot.dataValues.createdAt; 
