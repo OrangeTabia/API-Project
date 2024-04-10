@@ -100,6 +100,7 @@ router.get('/', validateQueryParams, async (req, res) => {
                 spotId: spot.id,
                 preview: true    
             },
+            attributes: ['url']
         }); 
 
         // Now calculate the average rating
@@ -182,6 +183,7 @@ router.get('/current', requireAuth, async (req, res) => {
                 spotId: spot.id,
                 preview: true    
             },
+            attributes: ['url']
         });
         
         // Now calculate the average rating
