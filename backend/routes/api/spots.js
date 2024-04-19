@@ -137,7 +137,7 @@ router.get('/', validateQueryParams, async (req, res) => {
             createdAt: formattedCreatedAt,
             updatedAt: formattedUpdatedAt,
             avgRating,
-            previewImage: spotImg.url
+            previewImage: spotImg ? spotImg.url : null
         }
     }))
     
@@ -217,7 +217,7 @@ router.get('/current', requireAuth, async (req, res) => {
             createdAt: formattedCreatedAt,
             updatedAt: formattedUpdatedAt,
             avgRating,
-            previewImage: spotImg.url
+            previewImage: spotImg ? spotImg.url : null
         }
     }));
 
