@@ -1,0 +1,33 @@
+.all-spots-div {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 40px;
+    border: 1px solid blue;
+}
+
+.spot-tile {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    margin-top: 30px;
+    border: 1px solid red;
+}
+
+.spot-tile:hover {
+    cursor: pointer;
+}
+
+.spot-image {
+    width: 100%;
+}
+
+.city-state-ratings {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+
+
+
