@@ -45,23 +45,3 @@ function spotReducer(state = initialState, action) {
 }
 
 export default spotReducer;
-
-
-/*
-
-    {
-        user: {
-            name: 'Jeramie',
-            password: 'Not my pass',
-        },
-        Spots: { 
-            Spots: [
-                {},
-            ]
-        },
-        Reviews: [
-            {}
-        ]
-    }
-
-*/

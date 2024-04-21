@@ -1,0 +1,98 @@
+.spot-details-div {
+    margin-left: 50px;
+    margin-right: 50px;
+    border: 1px solid orange;
+}
+
+.name-and-location {
+    border: 1px solid red;
+}
+
+.spot-images {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    /* border: 1px solid blue; */
+}
+
+.left-image-div {
+    /* border: 5px solid green; */
+    display: flex;
+    flex-direction: row;
+    width: 50%;
+}
+
+.right-images-div {
+    /* border: 5px solid green; */
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    width: 50%;
+    gap: 10px;
+}
+
+.right-image1, .right-image2, .right-image3, .right-image4 {
+    width: 49%;
+}
+
+.host-description-reserve {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 20px;
+    gap: 20px;
+    /* border: 5px solid green; */
+}
+
+.hostname-description {
+    /* border: 5px solid blue; */
+    width: 70%;
+}
+
+.reserve-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 15px;
+    border: 4px solid black;
+    border-radius: 10px;
+    width: 30%;
+}
+
+.price-reviews {
+    display: flex;
+    gap: 135px;
+    padding-top: 25px;
+}
+
+.price {
+    font-size: 22px;
+}
+
+.star-rating-reviews {
+    font-size: 18px;
+}
+
+.reserve-button {
+    width: 70%;
+    height: 50px;
+    margin-bottom: 25px;
+    color: white;
+    border: 2px solid black;
+    box-shadow: 5px 5px black;
+    background-color: #ff0062;
+}
+
+.reserve-button:hover {
+    cursor: pointer;
+}
+
+hr {
+    margin-top: 50px;
+    margin-bottom: 20px;
+    height: 2px;
+    color: black;
+    background-color: black;
+}
