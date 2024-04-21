@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react'; 
 import { fetchSpotDetails } from '../../store/spot';
 import { MdStarRate } from "react-icons/md";
-import { PiDotOutlineFill } from "react-icons/pi";
 import './SpotItem.css'; 
 
 const SpotDetails = () => {
@@ -46,14 +45,14 @@ const SpotDetails = () => {
                         <div className="reserve-div">
                             <div className="price-reviews">
                                 <span className="price">{`$${spotInfo.price} night`}</span>
-                                <span className="star-rating-reviews"><MdStarRate />{`${spotInfo.avgRating}`} <PiDotOutlineFill /> {`${spotInfo.numReviews} reviews`}</span>
+                                <span className="star-rating-reviews"><MdStarRate />{`${spotInfo.avgRating}`} · {`${spotInfo.numReviews} reviews`}</span>
                             </div>
                             <button className="reserve-button">Reserve</button>
                         </div>
                     </div>
                     <hr></hr>
                     <div className="reviews">
-                        <span><MdStarRate />{`${spotInfo.avgRating}`} <PiDotOutlineFill /> {`${spotInfo.numReviews} reviews`}</span>
+                        <span><MdStarRate />{`${spotInfo.avgRating}`} · {`${spotInfo.numReviews} reviews`}</span>
                         <h4>Reviewer's First Name</h4>
                         <h4>Review Date - Month Year</h4>
                         <p>Review Description</p>
