@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'; 
 import { useEffect } from 'react'; 
 import { fetchSpotDetails } from '../../store/spot';
+import { fetchReviews } from '../../store/spot';
 import { MdStarRate } from "react-icons/md";
 import './SpotItem.css'; 
 
@@ -10,10 +11,17 @@ const SpotDetails = () => {
     const dispatch = useDispatch();
     const ownerInfo = useSelector(state => state.spot.Owner); 
     const imagesInfo = useSelector(state => state.spot.SpotImages); 
-    const spotInfo = useSelector(state => state.spot);  
+    const spotInfo = useSelector(state => state.spot); 
+    const reviewsInfo = useSelector(state => state.spot.Reviews);
+
+    console.log("REVIEW INFO", reviewsInfo); 
 
     useEffect(() => {
         dispatch(fetchSpotDetails(spotId));
+    }, [dispatch, spotId]);
+
+    useEffect(() => {
+        dispatch(fetchReviews(spotId));
     }, [dispatch, spotId]);
 
 
@@ -53,9 +61,13 @@ const SpotDetails = () => {
                     <hr></hr>
                     <div className="reviews">
                         <span><MdStarRate />{`${spotInfo.avgRating}`} · {`${spotInfo.numReviews} reviews`}</span>
-                        <h4>Reviewer's First Name</h4>
-                        <h4>Review Date - Month Year</h4>
-                        <p>Review Description</p>
+                        {reviewsInfo?.map((review) => (
+                            <>
+                                <h4 className="reviewer-name">{review.User.firstName}</h4>
+                                <h4 className="review-date">{review.createdAt}</h4>
+                                <p className="review-description">{review.review}</p>
+                            </>
+                        ))}
                     </div>
                 </div>
             </div>

@@ -96,3 +96,19 @@ hr {
     color: black;
     background-color: black;
 }
+
+.reviewer-name {
+    margin-top: 20px;
+    margin-bottom: 8px;
+}
+
+.review-date {
+    margin-top: 0px;
+    margin-bottom: 8px;
+}
+
+.review-description {
+    margin-top: 0px;
+    margin-bottom: 30px;
+}
+

@@ -1,8 +1,10 @@
 .all-spots-div {
     display: flex;
-    justify-content: center;
+    flex-direction: row;
     flex-wrap: wrap;
     gap: 40px;
+    margin-left: 100px;
+    margin-right: 100px;
     border: 1px solid blue;
 }
 
