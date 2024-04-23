@@ -7,6 +7,9 @@
 }
 
 .login-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 300px;
     height: 45px;
     color: white;
@@ -16,6 +19,9 @@
 }
 
 .demo-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 300px;
     height: 45px;
     color: white;

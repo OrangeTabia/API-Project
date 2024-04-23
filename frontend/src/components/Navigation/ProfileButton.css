@@ -1,0 +1,35 @@
+.profile-dropdown:hover {
+    cursor: pointer;
+}
+
+.login-signup {
+    background-color: lightgrey;
+}
+
+.login-signup:hover {
+    cursor: pointer;
+}
+
+.user-info {
+    background-color: lightgrey;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: default;
+}
+
+.logout-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    background-color: #ff0062;
+    border-radius: 20px;
+    width: 75px;
+    height: 25px;
+    margin-bottom: 20px;
+}
+
+.logout-button:hover {
+    cursor: pointer;
+}

@@ -4,6 +4,7 @@ const RECEIVE_SPOT = 'spots/receiveSpot';
 const LOAD_REVIEWS = 'spots/loadReviews';
 const CREATE_SPOT = 'spots/createSpot'; 
 const ADD_IMAGE = '/spots/addImage'; 
+const ADD_REVIEW = '/spots/addReview'; 
 
 /**  Action Creators: */
 export const loadSpots = (spots) => ({
@@ -29,6 +30,11 @@ export const addSpot = (spot) => ({
 export const addImage = (image) => ({
     type: ADD_IMAGE, 
     image
+});
+
+export const addReview = (review) => ({
+    type: ADD_REVIEW,
+    review
 });
 
 
@@ -100,6 +106,23 @@ export const fetchAddImage = (imageInfo, spotId) => async (dispatch) => {
     }
 }
 
+export const fetchAddReview = (review, spotId) => async (dispatch) => {
+    const response = await csrfFetch(`/api/spots/${spotId}/reviews`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(review)
+    });
+    if (response.ok) {
+        const newReview = response.json();
+        dispatch(addReview(newReview));
+        return newReview;
+    } else {
+        const errors = await response.json();
+        return errors;
+    }
+
+}
+
 
 
 /** Reducer: */
@@ -121,6 +144,9 @@ function spotReducer(state = initialState, action) {
         }
         case ADD_IMAGE:  {
             return {...state, ...action.image}
+        }
+        case ADD_REVIEW: {
+            return {...state, [action.spot.id]: action.review}
         }
 
         default:
