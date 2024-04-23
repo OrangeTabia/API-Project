@@ -1,7 +1,35 @@
+
 .profile-dropdown {
   position: absolute;
 }
 
 .hidden {
   display: none;
+}
+
+.bearbnb-logo {
+  width: 55%;
+  /* border: 1px solid red; */
+}
+
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 100px;
+  margin-right: 100px;
+  margin-top: 10px;
+  /* border: 1px solid red; */
+}
+
+.right-navigation {
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+  /* border: 1px solid red; */
+}
+
+hr {
+  margin-top: 20px;
 }

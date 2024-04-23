@@ -12,6 +12,8 @@ const SpotForm = ({ spot, formType}) => {
     const [address, setAddress] = useState(spot?.address); 
     const [city, setCity] = useState(spot?.city); 
     const [state, setState] = useState(spot?.state);
+    const [lat, setLat] = useState(1);
+    const [lng, setLng] = useState(1); 
     const [description, setDescription] = useState(spot?.description);
     const [title, setTitle] = useState(spot?.title); 
     const [price, setPrice] = useState(spot?.price); 
@@ -82,8 +84,6 @@ const SpotForm = ({ spot, formType}) => {
         e.preventDefault(); 
         setHasSubmitted(true); 
 
-        debugger;
-
         // If there are errors, do a console log
         if (Object.values(errors).length > 0) {
             console.log('Stay on form, errors are present!')
@@ -95,9 +95,10 @@ const SpotForm = ({ spot, formType}) => {
                 city,
                 state,
                 description,
-                title,
+                name: title,
                 price,
-                previewImage,
+                lat,
+                lng
             }
             // If we're creating the spot, POST a new spot then navigate
             // to the page that will display it
@@ -112,23 +113,18 @@ const SpotForm = ({ spot, formType}) => {
                     imageTwo, 
                     imageThree,
                     imageFour
-                ].filter((image) => image != null)
+                ].filter((image) => image != null); 
 
-                debugger;
 
                 await Promise.all(images.map(async (image, index) => { 
                     let imageInfo = { 
                         url: image,
                         preview: index == 0
                     }
-                    debugger;
-                    let image_response = await dispatch(fetchAddImage(imageInfo, newSpot.id))
-                    debugger;
-                }))
+                    await dispatch(fetchAddImage(imageInfo, newSpot.id)); 
+                }));
 
-                debugger;
                 
-
                 // Navigate to the page
                 navigate(`/spots/${newSpot.id}`); 
             }
@@ -186,6 +182,28 @@ const SpotForm = ({ spot, formType}) => {
                     value={state}
                     placeholder="STATE"
                     onChange={(e) => setState(e.target.value)}
+                />
+            </label> 
+            <br></br>
+            <label>
+                Latitude <span className="errors">{hasSubmitted && errors.lat}</span>
+                <br></br>
+                <input 
+                    type="text" 
+                    value={lat}
+                    placeholder="latitude"
+                    onChange={(e) => setLat(e.target.value)}
+                />, 
+            </label> 
+            <br></br>
+            <label>
+                Longitude <span className="errors">{hasSubmitted && errors.lng}</span>
+                <br></br>
+                <input 
+                    type="text" 
+                    value={lng}
+                    placeholder="longitude"
+                    onChange={(e) => setLng(e.target.value)}
                 />
             </label> 
 

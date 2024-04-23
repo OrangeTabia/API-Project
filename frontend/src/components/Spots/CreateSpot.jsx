@@ -11,10 +11,15 @@ const CreateSpot = () => {
             city: '',
             state: '',
             description: '',
-            title: '',
+            name: '',
             price: '',
-            previewImage: '', 
-            spotImages: []
+            lat: '',
+            lng: '',
+            previewImage: '',
+            imageOne: '', 
+            imageTwo: '',
+            imageThree: '',
+            imageFour: ''
         }
     
         return (

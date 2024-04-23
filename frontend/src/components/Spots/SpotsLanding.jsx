@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom'; 
 import { useEffect } from 'react'; 
 import { fetchSpots } from '../../store/spot';
+import { fetchSpotDetails } from '../../store/spot';
 import { MdStarRate } from "react-icons/md";
 import './SpotsLanding.css'; 
 
@@ -17,9 +18,12 @@ const DisplayAllSpots = () => {
         dispatch(fetchSpots());
     }, [dispatch]);
 
+    // useEffect(() => {
+    //     dispatch(fetchSpotDetails()); 
+    // }, [dispatch]); 
+
     return (
         <>
-            <h1>Spots</h1>
             <div className="all-spots-div">
                 {spotsInfo?.map((spotTile) => {
                 const handleTileClick = () => {

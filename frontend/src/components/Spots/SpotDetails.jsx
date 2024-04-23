@@ -27,7 +27,6 @@ const SpotDetails = () => {
 
     return (
         <>
-            <h1>Spot Details</h1>
             <div className="spot-details-div">
                 <div className="name-and-location">
                     <h1>{spotInfo.name}</h1>

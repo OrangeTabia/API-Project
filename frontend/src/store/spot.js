@@ -52,7 +52,7 @@ export const fetchReviews = (spotId) => async (dispatch) => {
 }
 
 export const fetchCreateSpot = (spot) => async (dispatch) => {
-    const response = await fetch('/api/spots', {
+    const response = await csrfFetch('/api/spots', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'}, 
         body: JSON.stringify(spot)
@@ -68,7 +68,7 @@ export const fetchCreateSpot = (spot) => async (dispatch) => {
 }
 
 export const fetchEditSpot = (spot, spotId) => async (dispatch) => {
-    const response = await fetch(`/api/spots/${spotId}`, {
+    const response = await csrfFetch(`/api/spots/${spotId}`, {
         method: 'PUT',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(spot)
@@ -85,7 +85,7 @@ export const fetchEditSpot = (spot, spotId) => async (dispatch) => {
 }
 
 export const fetchAddImage = (imageInfo, spotId) => async (dispatch) => {
-    const response = await fetch(`/api/spots/${spotId}/images`, {
+    const response = await csrfFetch(`/api/spots/${spotId}/images`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(imageInfo)
@@ -120,7 +120,7 @@ function spotReducer(state = initialState, action) {
             return {...state, [action.spot.id]: action.spot}
         }
         case ADD_IMAGE:  {
-            return {...state, [action.spot.id]: action.image}
+            return {...state, ...action.image}
         }
 
         default:
