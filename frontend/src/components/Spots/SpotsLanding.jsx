@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react'; 
 import { fetchSpots } from '../../store/spot';
 import { MdStarRate } from "react-icons/md";
-import './SpotLanding.css'; 
+import './SpotsLanding.css'; 
 
 const DisplayAllSpots = () => {
     const navigate = useNavigate(); 
     const dispatch = useDispatch();
     const spotsInfo = useSelector(state => state.spot.Spots);  
+
+    console.log("SPOTS INFO", spotsInfo)
 
 
     useEffect(() => {

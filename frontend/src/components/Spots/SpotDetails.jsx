@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { fetchSpotDetails } from '../../store/spot';
 import { fetchReviews } from '../../store/spot';
 import { MdStarRate } from "react-icons/md";
-import './SpotItem.css'; 
+import './SpotDetails.css'; 
 
 const SpotDetails = () => {
     const { spotId } = useParams();

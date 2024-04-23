@@ -2,6 +2,8 @@
 const LOAD_SPOTS = 'spots/loadSpots'; 
 const RECEIVE_SPOT = 'spots/receiveSpot';
 const LOAD_REVIEWS = 'spots/loadReviews';
+const CREATE_SPOT = 'spots/createSpot'; 
+const ADD_IMAGE = '/spots/addImage'; 
 
 /**  Action Creators: */
 export const loadSpots = (spots) => ({
@@ -17,6 +19,16 @@ export const receiveSpot = (spot) => ({
 export const loadReviews = (reviews) => ({
     type: LOAD_REVIEWS,
     reviews
+});
+
+export const addSpot = (spot) => ({
+    type: CREATE_SPOT,
+    spot
+});
+
+export const addImage = (image) => ({
+    type: ADD_IMAGE, 
+    image
 });
 
 
@@ -39,6 +51,57 @@ export const fetchReviews = (spotId) => async (dispatch) => {
     dispatch(loadReviews(allReviews)); 
 }
 
+export const fetchCreateSpot = (spot) => async (dispatch) => {
+    const response = await fetch('/api/spots', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'}, 
+        body: JSON.stringify(spot)
+    });
+    if (response.ok) {
+        const newSpot = await response.json();
+        dispatch(addSpot(newSpot)); 
+        return newSpot;
+    } else {
+        const errors = await response.json();
+        return errors;
+    }
+}
+
+export const fetchEditSpot = (spot, spotId) => async (dispatch) => {
+    const response = await fetch(`/api/spots/${spotId}`, {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(spot)
+    });
+
+    if (response.ok) {
+        const updatedSpot = await response.json(); 
+        dispatch(addSpot(updatedSpot)); 
+        return updatedSpot;
+    } else {
+        const errors = await response.json(); 
+        return errors;
+    }
+}
+
+export const fetchAddImage = (imageInfo, spotId) => async (dispatch) => {
+    const response = await fetch(`/api/spots/${spotId}/images`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(imageInfo)
+    }); 
+    if (response.ok) {
+        const newImage = await response.json();
+        dispatch(addImage(newImage)); 
+        return newImage;
+    } else {
+        const errors = await response.json();
+        return errors;
+    }
+}
+
+
+
 /** Reducer: */
 const initialState = {}; 
 
@@ -52,6 +115,12 @@ function spotReducer(state = initialState, action) {
         }
         case LOAD_REVIEWS: {
             return {...state, ...action.reviews}
+        }
+        case CREATE_SPOT: {
+            return {...state, [action.spot.id]: action.spot}
+        }
+        case ADD_IMAGE:  {
+            return {...state, [action.spot.id]: action.image}
         }
 
         default:
