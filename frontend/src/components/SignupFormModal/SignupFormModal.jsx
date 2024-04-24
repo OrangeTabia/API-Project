@@ -116,7 +116,7 @@ function SignupFormModal() {
           </label>
           <br></br>
           {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
-          <button className="signup-button" type="submit">Sign Up</button>
+          <button className="signup-button" type="submit" disabled={Object.values(errors).length > 0}>Sign Up</button>
         </div>
       </form>
   );

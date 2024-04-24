@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux'; 
+import { useDispatch, useSelector } from 'react-redux'; 
 import { fetchAddReview } from '../../store/spot';
 import { useModal } from '../../context/Modal';
 import ReviewsRatingInput from './ReviewsRatingInput';
@@ -19,13 +19,16 @@ const ReviewForm = () => {
         const errors = {};
         if (review.length < 10) errors.review = "Please write at least 10 characters";
         if (stars == 0) errors.stars = "Please select a star rating";
+        // if current user has already created a review, errors.existingReview = "Review already exists for this spot";
         setErrors(errors); 
     }, [review, stars]); 
 
 
-    const handleSubmit = async (e, errors) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setHasSubmitted(true);
+
+        console.log("im here"); 
 
         if (Object.values(errors).length > 0) {
             console.log('Stay on form, errors are present!');
@@ -35,14 +38,14 @@ const ReviewForm = () => {
                 stars
             }
 
-            const newReviews = await dispatch(fetchAddReview(newReview, spotId)).then(closeModal);
+            const newReviews = await dispatch(fetchAddReview(newReview, spotId));
             navigate(`/spots/${spotId}`); 
             return newReviews;
         }
     }; 
 
     return (
-        <form onSubmit={(e) => handleSubmit(e, errors)}>
+        <form onSubmit={handleSubmit}>
             <div className="review-form">
                 <h1>How was your stay?</h1>
                 <div className="errors">
@@ -64,7 +67,7 @@ const ReviewForm = () => {
                         stars={stars}
                     />
                 </div>
-                <button className="submit-button">Submit Your Review</button>
+                <button className="submit-button" type="submit" onClick={closeModal} disabled={Object.values(errors).length > 0}>Submit Your Review</button>
             </div>
         </form>
     )

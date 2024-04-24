@@ -5,15 +5,8 @@ const CreateReview = () => {
     const currentUser = useSelector(state => state.session?.user); 
 
     if (currentUser) {
-        const review = {
-            review: '',
-            stars: ''
-        }
-    
         return (
             <ReviewFormModal 
-            review={review}
-            formType={"Create Review"}
             />
         )
     }

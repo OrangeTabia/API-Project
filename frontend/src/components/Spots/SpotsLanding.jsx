@@ -10,9 +10,6 @@ const DisplayAllSpots = () => {
     const dispatch = useDispatch();
     const spotsInfo = useSelector(state => state.spot.Spots);  
 
-    // console.log("SPOTS INFO", spotsInfo)
-
-
     useEffect(() => {
         dispatch(fetchSpots());
     }, [dispatch]);
@@ -25,7 +22,7 @@ const DisplayAllSpots = () => {
                     navigate(`spots/${spotTile.id}`); 
                 }
                 return (
-                        <div key={spotTile.id} className="spot-tile" onClick={handleTileClick}>
+                        <div key={spotTile.id} className="spot-tile" title={spotTile.name} onClick={handleTileClick}>
                             <div className="image-div">
                                 <img className="spot-image" src={spotTile.previewImage} alt="image thumbnail"/>
                             </div>

@@ -1,3 +1,5 @@
+
+
 /** Action Type Constants: */
 const LOAD_SPOTS = 'spots/loadSpots'; 
 const RECEIVE_SPOT = 'spots/receiveSpot';
@@ -36,6 +38,7 @@ export const addReview = (review) => ({
     type: ADD_REVIEW,
     review
 });
+
 
 
 /** Thunk Action Creators: */
@@ -79,7 +82,6 @@ export const fetchEditSpot = (spot, spotId) => async (dispatch) => {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(spot)
     });
-
     if (response.ok) {
         const updatedSpot = await response.json(); 
         dispatch(addSpot(updatedSpot)); 
@@ -122,6 +124,12 @@ export const fetchAddReview = (review, spotId) => async (dispatch) => {
     }
 }
 
+export const fetchLoadCurrentUserSpots = () => async (dispatch) => {
+    const response = await fetch('/api/spots/current'); 
+    const spots = await response.json(); 
+    dispatch(loadSpots(spots)); 
+ }
+
 
 
 /** Reducer: */
@@ -145,9 +153,11 @@ function spotReducer(state = initialState, action) {
             return {...state, ...action.image}
         }
         case ADD_REVIEW: {
-            debugger;
             return {...state, [action.spot.id]: action.review}
         }
+        // case LOAD_CURRENT_SPOTS: {
+        //     return {...state, ...action.spots}
+        // }
 
         default:
             return state;

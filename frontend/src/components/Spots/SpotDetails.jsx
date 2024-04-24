@@ -16,8 +16,11 @@ const SpotDetails = () => {
     const spotInfo = useSelector(state => state.spot); 
     const reviewsInfo = useSelector(state => state.spot.Reviews);
     const currentUser = useSelector(state => state.session?.user);
+    const previewImage = imagesInfo.find((image) => image.preview == true);
+    const images = imagesInfo.filter((image) => image.preview == false); 
 
-    console.log("review info", reviewsInfo);
+
+    console.log("images", imagesInfo);
 
     useEffect(() => {
         dispatch(fetchSpotDetails(spotId));
@@ -68,13 +71,16 @@ const SpotDetails = () => {
                 </div>
                 <div className="spot-images">
                     <div className="left-image-div">
-                        <img className="left-image" src="https://www.mountainliving.com/content/uploads/data-import/ae886c8e/DJI_0087bach-house.jpg" alt="tahoe-house"></img>
+                        <img className="left-image" src={previewImage.url} alt="tahoe-house"></img>
                     </div>
                     <div className="right-images-div">
-                        <img className="right-image1" src="https://www.mountainliving.com/content/uploads/data-import/ae886c8e/DJI_0087bach-house.jpg" alt="tahoe-house"></img>
+                        {images.map((image) => (
+                            <img className="right-images" src={image.url} alt="tahoe-house"></img>
+                        ))}
+                        {/* <img className="right-image1" src="https://www.mountainliving.com/content/uploads/data-import/ae886c8e/DJI_0087bach-house.jpg" alt="tahoe-house"></img>
                         <img className="right-image2" src="https://www.mountainliving.com/content/uploads/data-import/ae886c8e/DJI_0087bach-house.jpg" alt="tahoe-house"></img>
                         <img className="right-image3" src="https://www.mountainliving.com/content/uploads/data-import/ae886c8e/DJI_0087bach-house.jpg" alt="tahoe-house"></img>
-                        <img className="right-image4" src="https://www.mountainliving.com/content/uploads/data-import/ae886c8e/DJI_0087bach-house.jpg" alt="tahoe-house"></img>
+                        <img className="right-image4" src="https://www.mountainliving.com/content/uploads/data-import/ae886c8e/DJI_0087bach-house.jpg" alt="tahoe-house"></img> */}
                     </div>
                 </div>
                 <div className="spot-info-and-reviews">
@@ -102,7 +108,8 @@ const SpotDetails = () => {
                         />)}
 
                         {reviewsInfo?.map((review) => (
-                            <div>
+                            <div key={review.id}>
+                                {/* need to grab the correct current logged in user's name*/}
                                 <h4 className="reviewer-name">{review.User.firstName}</h4>
                                 <h4 className="review-date">{convertDate(review.createdAt)}</h4>
                                 <p className="review-description">{review.review}</p>
