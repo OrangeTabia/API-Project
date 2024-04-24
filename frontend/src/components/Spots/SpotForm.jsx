@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router-dom'; 
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux'; 
-import { fetchAddImage, fetchCreateSpot } from '../../store/spot';
-import { fetchEditSpot } from '../../store/spot';
+import { fetchAddImage, fetchCreateSpot, fetchEditSpot } from '../../store/spot';
 import './SpotForm.css'; 
 
 const SpotForm = ({ spot, formType}) => {
@@ -77,7 +76,7 @@ const SpotForm = ({ spot, formType}) => {
         imageTwo,
         imageThree,
         imageFour
-    ])
+    ]); 
 
     const handleSubmit = async (e, errors) => {
         // Set the hasSubmitted variable to true to render errors
@@ -124,7 +123,6 @@ const SpotForm = ({ spot, formType}) => {
                     await dispatch(fetchAddImage(imageInfo, newSpot.id)); 
                 }));
 
-                
                 // Navigate to the page
                 navigate(`/spots/${newSpot.id}`); 
             }

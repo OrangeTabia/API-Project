@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 import { fetchSpotDetails } from '../../store/spot';
 import { fetchReviews } from '../../store/spot';
 import { MdStarRate } from "react-icons/md";
+import OpenModalButton from '../OpenModalButton';
+import ReviewFormModal from './ReviewFormModal'; 
 import './SpotDetails.css'; 
 
 const SpotDetails = () => {
@@ -13,8 +15,9 @@ const SpotDetails = () => {
     const imagesInfo = useSelector(state => state.spot.SpotImages); 
     const spotInfo = useSelector(state => state.spot); 
     const reviewsInfo = useSelector(state => state.spot.Reviews);
+    const currentUser = useSelector(state => state.session?.user);
 
-    console.log("REVIEW INFO", reviewsInfo); 
+    console.log("Owner info", ownerInfo);
 
     useEffect(() => {
         dispatch(fetchSpotDetails(spotId));
@@ -24,6 +27,11 @@ const SpotDetails = () => {
         dispatch(fetchReviews(spotId));
     }, [dispatch, spotId]);
 
+
+    let canReview = reviewsInfo?.find((review) => review.userId == currentUser?.id) == undefined;
+
+    // Create a boolean to represent whether a current user is the owner
+    let notOwner = currentUser?.id !== ownerInfo?.id;
 
     return (
         <>
@@ -60,6 +68,11 @@ const SpotDetails = () => {
                     <hr></hr>
                     <div className="reviews">
                         <span><MdStarRate />{`${spotInfo.avgRating}`} · {`${spotInfo.numReviews} reviews`}</span>
+                        {canReview && notOwner && currentUser && (<OpenModalButton 
+                            buttonText="Post Your Review"
+                            modalComponent={<ReviewFormModal />}
+                        />)}
+                        
                         {reviewsInfo?.map((review) => (
                             <>
                                 <h4 className="reviewer-name">{review.User.firstName}</h4>

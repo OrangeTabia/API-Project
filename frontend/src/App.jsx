@@ -7,6 +7,7 @@ import SpotsLanding from './components/Spots/SpotsLanding';
 import SpotDetails from './components/Spots/SpotDetails';
 import CreateSpot from './components/Spots/CreateSpot'; 
 import UpdateSpot from './components/Spots/UpdateSpot';
+import CreateReview from './components/Spots/CreateReview'; 
 import Navigation from './components/Navigation/Navigation-bonus';
 import * as sessionActions from './store/session';
 import { Modal } from './context/Modal';
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
       {
         path: '/spots/:spotId',
         element: <UpdateSpot />
+      }, 
+      {
+        path: '/spots/:spotId/reviews',
+        element: <CreateReview />
       }
       // {
       //   path: 'login',

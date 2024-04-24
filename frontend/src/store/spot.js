@@ -120,7 +120,6 @@ export const fetchAddReview = (review, spotId) => async (dispatch) => {
         const errors = await response.json();
         return errors;
     }
-
 }
 
 
@@ -146,6 +145,7 @@ function spotReducer(state = initialState, action) {
             return {...state, ...action.image}
         }
         case ADD_REVIEW: {
+            debugger;
             return {...state, [action.spot.id]: action.review}
         }
 
