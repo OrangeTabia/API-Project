@@ -14,19 +14,19 @@ module.exports = {
     await Booking.bulkCreate([
       {
         spotId: 1,
-        userId: 1,
+        userId: 2,
         startDate: '2024-07-01', 
         endDate: '2024-07-15'
       }, 
       {
         spotId: 2,
-        userId: 2,
+        userId: 3,
         startDate: '2024-08-20', 
         endDate: '2024-08-30'
       },
       {
         spotId: 3,
-        userId: 3,
+        userId: 1,
         startDate: '2025-12-10', 
         endDate: '2025-12-30'
       },
