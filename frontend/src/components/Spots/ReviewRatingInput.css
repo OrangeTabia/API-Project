@@ -1,20 +1,12 @@
 .rating-input {
     display: flex;
     flex-direction: row;
-    
 }
 
 .rating-input .filled {
     color: red;
-    fill: red;
-    &:hover { 
-        cursor: pointer
-    }
 }
 
 .rating-input .empty {
     color: black;
-    &:hover { 
-        cursor: pointer
-    }
 }

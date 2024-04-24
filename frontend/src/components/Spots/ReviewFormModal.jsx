@@ -2,6 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux'; 
 import { fetchAddReview } from '../../store/spot';
+import { useModal } from '../../context/Modal';
 import ReviewsRatingInput from './ReviewsRatingInput';
 
 const ReviewForm = () => {
@@ -12,6 +13,7 @@ const ReviewForm = () => {
     const [stars, setStars] = useState(0); 
     const [errors, setErrors] = useState({}); 
     const [hasSubmitted, setHasSubmitted] = useState(false); 
+    const { closeModal } = useModal(); 
 
     useEffect(() => {
         const errors = {};
@@ -33,8 +35,9 @@ const ReviewForm = () => {
                 stars
             }
 
-            const newReviews = await dispatch(fetchAddReview(newReview, spotId));
+            const newReviews = await dispatch(fetchAddReview(newReview, spotId)).then(closeModal);
             navigate(`/spots/${spotId}`); 
+            return newReviews;
         }
     }; 
 
@@ -43,7 +46,6 @@ const ReviewForm = () => {
             <div className="review-form">
                 <h1>How was your stay?</h1>
                 <div className="errors">
-                {/* add another error if the reviewer already made a review for this spot*/}
                 {hasSubmitted && errors.review}
                 <br></br>
                 {hasSubmitted && errors.stars}

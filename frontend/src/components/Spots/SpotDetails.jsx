@@ -5,7 +5,7 @@ import { fetchSpotDetails } from '../../store/spot';
 import { fetchReviews } from '../../store/spot';
 import { MdStarRate } from "react-icons/md";
 import OpenModalButton from '../OpenModalButton';
-import ReviewFormModal from './ReviewFormModal'; 
+import CreateReview from './CreateReview'; 
 import './SpotDetails.css'; 
 
 const SpotDetails = () => {
@@ -17,7 +17,7 @@ const SpotDetails = () => {
     const reviewsInfo = useSelector(state => state.spot.Reviews);
     const currentUser = useSelector(state => state.session?.user);
 
-    console.log("Owner info", ownerInfo);
+    console.log("review info", reviewsInfo);
 
     useEffect(() => {
         dispatch(fetchSpotDetails(spotId));
@@ -28,8 +28,34 @@ const SpotDetails = () => {
     }, [dispatch, spotId]);
 
 
-    let canReview = reviewsInfo?.find((review) => review.userId == currentUser?.id) == undefined;
+    // Date converter
+    const convertDate = (date) => {
+        const months = [ 
+            '',
+            'January', 
+            'Feburary', 
+            'March', 
+            'April', 
+            'May', 
+            'June', 
+            'July', 
+            'August', 
+            'September', 
+            'October', 
+            'November', 
+            'December']
+        const month = months[date.substring(6,7)]
 
+        return `${month} ${date.substring(0,4)}`
+    }
+
+    const reserveClick = () => {
+        alert('Feature coming soon!'); 
+    }
+
+
+    // A boolean to represent whether a current user has already created a review
+    let canReview = reviewsInfo?.find((review) => review.userId == currentUser?.id) == undefined;
     // Create a boolean to represent whether a current user is the owner
     let notOwner = currentUser?.id !== ownerInfo?.id;
 
@@ -60,25 +86,27 @@ const SpotDetails = () => {
                         <div className="reserve-div">
                             <div className="price-reviews">
                                 <span className="price">{`$${spotInfo.price} night`}</span>
-                                <span className="star-rating-reviews"><MdStarRate />{`${spotInfo.avgRating}`} · {`${spotInfo.numReviews} reviews`}</span>
+                                <span className="star-rating-reviews"><MdStarRate />{spotInfo.avgRating ? `${(spotInfo.avgRating)} · ${spotInfo.numReviews} reviews` : 'New'}</span>
                             </div>
-                            <button className="reserve-button">Reserve</button>
+                            <button className="reserve-button" onClick={reserveClick}>Reserve</button>
                         </div>
                     </div>
                     <hr></hr>
                     <div className="reviews">
-                        <span><MdStarRate />{`${spotInfo.avgRating}`} · {`${spotInfo.numReviews} reviews`}</span>
+                        <span><MdStarRate />{spotInfo.numReviews ? `${(spotInfo.avgRating)} · ${spotInfo.numReviews} reviews` : `${(spotInfo.avgRating)}`}</span>
+
+                        <br></br>
                         {canReview && notOwner && currentUser && (<OpenModalButton 
                             buttonText="Post Your Review"
-                            modalComponent={<ReviewFormModal />}
+                            modalComponent={<CreateReview />}
                         />)}
-                        
+
                         {reviewsInfo?.map((review) => (
-                            <>
+                            <div>
                                 <h4 className="reviewer-name">{review.User.firstName}</h4>
-                                <h4 className="review-date">{review.createdAt}</h4>
+                                <h4 className="review-date">{convertDate(review.createdAt)}</h4>
                                 <p className="review-description">{review.review}</p>
-                            </>
+                            </div>
                         ))}
                     </div>
                 </div>
