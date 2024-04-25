@@ -74,7 +74,7 @@ const SpotDetails = () => {
                     </div>
                     <div className="right-images-div">
                         {images?.map((image) => (
-                            <img className="right-images" src={image?.url} alt="tahoe-house"></img>
+                            <img key={image.id} className="right-images" src={image?.url} alt="tahoe-house"></img>
                         ))}
                     </div>
                 </div>
@@ -87,14 +87,14 @@ const SpotDetails = () => {
                         <div className="reserve-div">
                             <div className="price-reviews">
                                 <span className="price">{`$${spotInfo.price} night`}</span>
-                                <span className="star-rating-reviews"><MdStarRate />{spotInfo.avgRating ? `${(spotInfo?.avgRating).toFixed(1)} · ${numRev} ${numRev > 1 ? 'reviews': 'review'}` : 'New'}</span>
+                                <span className="star-rating-reviews"><MdStarRate />{spotInfo.avgRating ? `${(spotInfo.avgRating).toFixed(1)} · ${numRev} ${numRev > 1 ? 'reviews': 'review'}` : 'New'}</span>
                             </div>
                             <button className="reserve-button" onClick={reserveClick}>Reserve</button>
                         </div>
                     </div>
                     <hr></hr>
                     <div className="reviews">
-                        <span><MdStarRate />{numRev ? `${(spotInfo?.avgRating).toFixed(1)} · ${numRev} ${numRev > 1 ? 'reviews': 'review'}` : `${(spotInfo?.avgRating)}`}</span>
+                        <span><MdStarRate />{numRev ? `${(spotInfo.avgRating).toFixed(1)} · ${numRev} ${numRev > 1 ? 'reviews': 'review'}` : `${(spotInfo?.avgRating)}`}</span>
 
                         <br></br>
                         {canReview && notOwner && currentUser && (<OpenModalButton 

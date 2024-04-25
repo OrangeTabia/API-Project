@@ -32,7 +32,6 @@ const ManageSpots = () => {
                         navigate(`/spots/${spotTile.id}`);
                     }
 
-                    debugger;
                     return (
                         <div key={spotTile.id} className="spot-tile">
                             <div className="image-div" onClick={handleTileClick}>
