@@ -101,19 +101,27 @@ const SpotDetails = () => {
                             buttonText= {spotInfo.numReviews == 0 ? 'Be the first to post a review!' : "Post Your Review"}
                             modalComponent={<CreateReview />}
                         />)}
+                        {
+                            reviewsInfo?.map((review) => {
+                                // analyze each one to see if we can review!
+                                // A boolean to represent whether a current user can delete their review
+                                let canDeleteReview = review.userId == currentUser.id; 
 
-                        {reviewsInfo?.map((review) => (
-                            <div key={review.id}>
-                                <h4 className="reviewer-name">{review.User.firstName}</h4>
-                                <h4 className="review-date">{convertDate(review.createdAt)}</h4>
-                                <p className="review-description">{review.review}</p>
-                                {/* only the currnet user who is the reviewer should see the button */}
-                                <OpenModalButton
-                                buttonText="Delete"
-                                modalComponent={<DeleteReview reviewId={review.id} spotId={spotId}/>}
-                                />
-                            </div>
-                        ))}
+                                return (
+                                <div key={review.id}>
+                                    <h4 className="reviewer-name">{review.User.firstName}</h4>
+                                    <h4 className="review-date">{convertDate(review.createdAt)}</h4>
+                                    <p className="review-description">{review.review}</p>
+                                    {canDeleteReview && (
+                                        <OpenModalButton
+                                        buttonText="Delete"
+                                        modalComponent={<DeleteReview reviewId={review.id} spotId={spotId}/>}
+                                        />
+                                    )}
+                                </div>
+                                )
+                            })
+                        }
                     </div>
                 </div>
             </div>
