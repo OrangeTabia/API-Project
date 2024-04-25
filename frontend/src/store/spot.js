@@ -3,9 +3,8 @@
 /** Action Type Constants: */
 const LOAD_SPOTS = 'spots/loadSpots'; 
 const RECEIVE_SPOT = 'spots/receiveSpot';
-const CREATE_SPOT = 'spots/createSpot';
+const UPDATE_SPOT = 'spots/updateSpot';
 const ADD_IMAGE = '/spots/addImage'; 
-
 const LOAD_REVIEWS = 'spots/loadReviews'; 
 const ADD_REVIEW = '/spots/addReview'; 
 
@@ -21,8 +20,8 @@ export const receiveSpot = (spot) => ({
     spot
 });
 
-export const addSpot = (spot) => ({
-    type: CREATE_SPOT,
+export const updateSpot = (spot) => ({
+    type: UPDATE_SPOT,
     spot
 });
 
@@ -72,7 +71,7 @@ export const fetchCreateSpot = (spot) => async (dispatch) => {
     });
     if (response.ok) {
         const newSpot = await response.json();
-        dispatch(addSpot(newSpot)); 
+        dispatch(updateSpot(newSpot)); 
         return newSpot;
     } else {
         const errors = await response.json();
@@ -88,7 +87,7 @@ export const fetchEditSpot = (spot, spotId) => async (dispatch) => {
     });
     if (response.ok) {
         const updatedSpot = await response.json(); 
-        dispatch(addSpot(updatedSpot)); 
+        dispatch(updateSpot(updatedSpot)); 
         return updatedSpot;
     } else {
         const errors = await response.json(); 
@@ -152,7 +151,7 @@ function spotReducer(state = initialState, action) {
             // TODO: Add a sort statement here
             return {...state, ...action.reviews}
         }
-        case CREATE_SPOT: {
+        case UPDATE_SPOT: {
             return {...state, [action.spot.id]: action.spot}
         }
         case ADD_IMAGE:  {

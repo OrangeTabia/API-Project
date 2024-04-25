@@ -6,6 +6,8 @@ import { fetchSpotDetails } from '../../store/spot';
 
 const UpdateSpot = () => {
     const currentUser = useSelector(state => state.session?.user);
+    const ownerInfo = useSelector(state => state.spot?.Owner); 
+    let isOwner = currentUser?.id == ownerInfo?.id;
     
     const { spotId } = useParams(); 
     const dispatch = useDispatch(); 
@@ -13,21 +15,18 @@ const UpdateSpot = () => {
 
     useEffect(() => {
         dispatch(fetchSpotDetails(spotId)); 
-    }, [dispatch, reportId]); 
+    }, [dispatch, spotId]); 
 
-    console.log("SPOT INFO", spot); 
-
-    if (!spot) return (<></>); 
+    // Ensure current user is the spot ownerId
+    if (!spot || !isOwner) return (<></>); 
 
     return (
-        Object.keys(spot).length > 1 && (
-            <>
-                <SpotForm 
-                spot={spot}
-                formType={"Update Spot"}
-                />
-            </>
-        )
+        <>
+            <SpotForm 
+            spot={spot}
+            formType={"Update Spot"}
+            />
+        </>
     )
 }
 

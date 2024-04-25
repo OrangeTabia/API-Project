@@ -30,8 +30,8 @@ const ManageSpots = () => {
                         navigate(`/spots/${spotTile.id}`);
                     }
                     return (
-                        <div key={spotTile.id} className="spot-tile" onClick={handleTileClick}>
-                            <div className="image-div">
+                        <div key={spotTile.id} className="spot-tile">
+                            <div className="image-div" onClick={handleTileClick}>
                                 <img className="spot-image" src={spotTile.previewImage} alt="image thumbnail"/>
                             </div>
                             <div className="city-state-ratings">
@@ -39,12 +39,8 @@ const ManageSpots = () => {
                                 <span><MdStarRate />{(spotTile.avgRating != 0)? `${(spotTile.avgRating).toFixed(1)}` : 'New'}</span>
                             </div>
                             <p className="price">{`$${spotTile.price}`} night</p>
-                            <NavLink>
-                                <button>Update</button>
-                            </NavLink>
-                            <NavLink>
-                                <button>Delete</button>
-                            </NavLink>
+                            <button onClick={() => navigate(`/spots/${spotTile.id}/edit`)}>Update</button>
+                            <button>Delete</button>
                         </div>
                     )
                 })}

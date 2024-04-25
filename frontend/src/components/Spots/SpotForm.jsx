@@ -79,8 +79,8 @@ const SpotForm = ({ spot, formType}) => {
     ]); 
 
     const handleSubmit = async (e, errors) => {
-        // Set the hasSubmitted variable to true to render errors
         e.preventDefault(); 
+        // Set the hasSubmitted variable to true to render errors
         setHasSubmitted(true); 
 
         // If there are errors, do a console log
@@ -99,6 +99,7 @@ const SpotForm = ({ spot, formType}) => {
                 lat,
                 lng
             }
+
             // If we're creating the spot, POST a new spot then navigate
             // to the page that will display it
             // POST NEW SPOT
@@ -123,13 +124,14 @@ const SpotForm = ({ spot, formType}) => {
                     await dispatch(fetchAddImage(imageInfo, newSpot.id)); 
                 }));
 
-                // Navigate to the page
+                // Navigate to the page after posting a new spot
                 navigate(`/spots/${newSpot.id}`); 
             }
 
+
             // UPDATE SPOT
             if (formType === 'Update Spot') {
-                const updatedSpot = await dispatch(fetchEditSpot(spot, spot.id));
+                const updatedSpot = await dispatch(fetchEditSpot(spot, spot.id)); 
 
                 let images = [
                     previewImage, 
@@ -146,6 +148,7 @@ const SpotForm = ({ spot, formType}) => {
                     }
                     await dispatch(fetchAddImage(imageInfo, updatedSpot.id)); 
                 }));
+
                 navigate(`/spots/${updatedSpot.id}`); 
             }
         }
