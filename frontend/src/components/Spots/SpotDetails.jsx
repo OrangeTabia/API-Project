@@ -58,6 +58,7 @@ const SpotDetails = () => {
     let canReview = reviewsInfo?.find((review) => review.userId == currentUser?.id) == undefined;
     // Create a boolean to represent whether a current user is the owner
     let notOwner = currentUser?.id !== ownerInfo?.id;
+    let numRev = spotInfo.numReviews;
 
     return (
         <>
@@ -73,7 +74,7 @@ const SpotDetails = () => {
                     <div className="right-images-div">
                         {images?.map((image) => (
                             <img className="right-images" src={image?.url} alt="tahoe-house"></img>
-                        ))};
+                        ))}
                     </div>
                 </div>
                 <div className="spot-info-and-reviews">
@@ -85,18 +86,18 @@ const SpotDetails = () => {
                         <div className="reserve-div">
                             <div className="price-reviews">
                                 <span className="price">{`$${spotInfo.price} night`}</span>
-                                <span className="star-rating-reviews"><MdStarRate />{spotInfo.avgRating ? `${(spotInfo.avgRating)} · ${spotInfo.numReviews} reviews` : 'New'}</span>
+                                <span className="star-rating-reviews"><MdStarRate />{spotInfo.avgRating ? `${(spotInfo?.avgRating).toFixed(1)} · ${numRev} ${numRev > 1 ? 'reviews': 'review'}` : 'New'}</span>
                             </div>
                             <button className="reserve-button" onClick={reserveClick}>Reserve</button>
                         </div>
                     </div>
                     <hr></hr>
                     <div className="reviews">
-                        <span><MdStarRate />{spotInfo.numReviews ? `${(spotInfo.avgRating)} · ${spotInfo.numReviews} reviews` : `${(spotInfo.avgRating)}`}</span>
+                        <span><MdStarRate />{numRev ? `${(spotInfo?.avgRating).toFixed(1)} · ${numRev} ${numRev > 1 ? 'reviews': 'review'}` : `${(spotInfo?.avgRating)}`}</span>
 
                         <br></br>
                         {canReview && notOwner && currentUser && (<OpenModalButton 
-                            buttonText="Post Your Review"
+                            buttonText= {spotInfo.numReviews == 0 ? 'Be the first to post a review!' : "Post Your Review"}
                             modalComponent={<CreateReview />}
                         />)}
 

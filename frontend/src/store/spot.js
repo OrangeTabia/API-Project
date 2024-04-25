@@ -37,9 +37,10 @@ export const loadReviews = (reviews) => ({
     reviews
 });
 
-export const addReview = (review) => ({
+export const addReview = (review, user) => ({
     type: ADD_REVIEW,
-    review
+    review, 
+    user
 });
 
 
@@ -111,15 +112,16 @@ export const fetchAddImage = (imageInfo, spotId) => async (dispatch) => {
     }
 }
 
-export const fetchAddReview = (review, spotId) => async (dispatch) => {
+export const fetchAddReview = (review, spotId, currentUser) => async (dispatch) => {
     const response = await csrfFetch(`/api/spots/${spotId}/reviews`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(review)
     });
     if (response.ok) {
-        const newReview = response.json();
-        dispatch(addReview(newReview));
+        const newReview = await response.json();
+        dispatch(addReview(newReview, currentUser));
+        
         return newReview;
     } else {
         const errors = await response.json();
@@ -147,6 +149,7 @@ function spotReducer(state = initialState, action) {
             return {...state, ...action.spot}
         }
         case LOAD_REVIEWS: {
+            // TODO: Add a sort statement here
             return {...state, ...action.reviews}
         }
         case CREATE_SPOT: {
@@ -156,7 +159,13 @@ function spotReducer(state = initialState, action) {
             return {...state, ...action.image}
         }
         case ADD_REVIEW: {
-            return {...state, [action.spot.id]: action.review}
+            return {...state, Reviews: [
+                {
+                    ...action.review,
+                    User: action.user,
+                }, 
+                ...state.Reviews
+            ]}
         }
 
 

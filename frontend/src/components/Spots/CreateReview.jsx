@@ -6,8 +6,7 @@ const CreateReview = () => {
 
     if (currentUser) {
         return (
-            <ReviewFormModal 
-            />
+            <ReviewFormModal />
         )
     }
 }

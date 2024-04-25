@@ -14,6 +14,9 @@ const ReviewForm = () => {
     const [errors, setErrors] = useState({}); 
     const [hasSubmitted, setHasSubmitted] = useState(false); 
     const { closeModal } = useModal(); 
+    // Pull out the current user to pass to the review
+    const currentUser = useSelector(state => state.session?.user); 
+
 
     useEffect(() => {
         const errors = {};
@@ -28,8 +31,6 @@ const ReviewForm = () => {
         e.preventDefault();
         setHasSubmitted(true);
 
-        console.log("im here"); 
-
         if (Object.values(errors).length > 0) {
             console.log('Stay on form, errors are present!');
         } else {
@@ -38,7 +39,7 @@ const ReviewForm = () => {
                 stars
             }
 
-            const newReviews = await dispatch(fetchAddReview(newReview, spotId));
+            const newReviews = await dispatch(fetchAddReview(newReview, spotId, currentUser));
             navigate(`/spots/${spotId}`); 
             return newReviews;
         }
@@ -67,7 +68,9 @@ const ReviewForm = () => {
                         stars={stars}
                     />
                 </div>
-                <button className="submit-button" type="submit" onClick={closeModal} disabled={Object.values(errors).length > 0}>Submit Your Review</button>
+                <button className="submit-button" type="submit" onClick={(e) => { 
+                    handleSubmit(e).then(closeModal());
+                }} disabled={Object.values(errors).length > 0}>Submit Your Review</button>
             </div>
         </form>
     )

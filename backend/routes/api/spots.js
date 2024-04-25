@@ -251,7 +251,7 @@ router.get('/:spotId/reviews', async (req, res) => {
 
             const currentUser = await User.findOne({
                 where: {
-                    id: spotId
+                    id: review.userId
                 },
                 attributes: ['id', 'firstName', 'lastName']
             });
