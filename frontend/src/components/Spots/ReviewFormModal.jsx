@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'; 
-import { fetchAddReview } from '../../store/spot';
+import { fetchAddReview, fetchSpotDetails } from '../../store/spot';
 import { useModal } from '../../context/Modal';
 import ReviewsRatingInput from './ReviewsRatingInput';
 
@@ -39,9 +39,9 @@ const ReviewForm = () => {
                 stars
             }
 
-            const newReviews = await dispatch(fetchAddReview(newReview, spotId, currentUser));
+            await dispatch(fetchAddReview(newReview, spotId, currentUser));
+            await dispatch(fetchSpotDetails(spotId)); 
             navigate(`/spots/${spotId}`); 
-            return newReviews;
         }
     }; 
 

@@ -1,6 +1,6 @@
 import { useModal } from '../../context/Modal';
 import { useDispatch } from 'react-redux';
-import { fetchDeleteReview, fetchReviews } from '../../store/spot';
+import { fetchDeleteReview, fetchReviews, fetchSpotDetails } from '../../store/spot';
 
 const DeleteReview = ({reviewId, spotId}) => {
     const { closeModal } = useModal();
@@ -10,6 +10,7 @@ const DeleteReview = ({reviewId, spotId}) => {
         e.preventDefault(); 
         await dispatch(fetchDeleteReview(reviewId)); 
         await dispatch(fetchReviews(spotId));
+        await dispatch(fetchSpotDetails(spotId)); 
         await closeModal(); 
     }
 
