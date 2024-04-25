@@ -5,6 +5,7 @@ const LOAD_SPOTS = 'spots/loadSpots';
 const RECEIVE_SPOT = 'spots/receiveSpot';
 const UPDATE_SPOT = 'spots/updateSpot';
 const ADD_IMAGE = '/spots/addImage'; 
+const REMOVE_SPOT = '/spots/removeSpot'; 
 const LOAD_REVIEWS = 'spots/loadReviews'; 
 const ADD_REVIEW = '/spots/addReview'; 
 
@@ -42,6 +43,10 @@ export const addReview = (review, user) => ({
     user
 });
 
+export const removeSpot = (spotId) => ({
+    type: REMOVE_SPOT,
+    spotId
+}); 
 
 
 /** Thunk Action Creators: */
@@ -134,6 +139,18 @@ export const fetchLoadCurrentUserSpots = () => async (dispatch) => {
     dispatch(loadSpots(spots)); 
  }
 
+export const fetchDeleteSpot = (spotId) => async (dispatch) => {
+    const response = await csrfFetch(`/api/spots/${spotId}`, {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'},
+    }); 
+    if (response.ok) {
+        dispatch(removeSpot(spotId)); 
+    } else {
+        const errors = await response.json();
+        return errors;
+    }
+}
 
 
 /** Reducer: */
@@ -154,7 +171,7 @@ function spotReducer(state = initialState, action) {
         case UPDATE_SPOT: {
             return {...state, [action.spot.id]: action.spot}
         }
-        case ADD_IMAGE:  {
+        case ADD_IMAGE: {
             return {...state, ...action.image}
         }
         case ADD_REVIEW: {
@@ -165,6 +182,11 @@ function spotReducer(state = initialState, action) {
                 }, 
                 ...state.Reviews
             ]}
+        }
+        case REMOVE_SPOT: {
+            const newState = {...state};
+            delete newState[action.spotId];
+            return newState;
         }
 
 

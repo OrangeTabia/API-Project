@@ -103,7 +103,6 @@ const SpotDetails = () => {
 
                         {reviewsInfo?.map((review) => (
                             <div key={review.id}>
-                                {/* need to grab the correct current logged in user's name*/}
                                 <h4 className="reviewer-name">{review.User.firstName}</h4>
                                 <h4 className="review-date">{convertDate(review.createdAt)}</h4>
                                 <p className="review-description">{review.review}</p>

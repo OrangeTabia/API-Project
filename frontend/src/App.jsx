@@ -9,6 +9,7 @@ import CreateSpot from './components/Spots/CreateSpot';
 import UpdateSpot from './components/Spots/UpdateSpot';
 import CreateReview from './components/Spots/CreateReview'; 
 import ManageSpots from './components/Spots/ManageSpots'; 
+import DeleteSpot from './components/Spots/DeleteSpot'; 
 import Navigation from './components/Navigation/Navigation-bonus';
 import * as sessionActions from './store/session';
 import { Modal } from './context/Modal';
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
         path: '/spots/current',
         element: <ManageSpots />
       }, 
+      {
+        path: '/spots/:spotId/delete',
+        element: <DeleteSpot />
+      }
       // {
       //   path: 'login',
       //   element: <LoginFormPage />

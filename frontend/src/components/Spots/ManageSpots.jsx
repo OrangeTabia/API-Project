@@ -2,6 +2,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { fetchLoadCurrentUserSpots } from '../../store/spot';
 import { useEffect } from 'react';
+import OpenModalButton from '../OpenModalButton';
+import DeleteSpot from './DeleteSpot';
 import { MdStarRate } from "react-icons/md";
 
 const ManageSpots = () => {
@@ -29,6 +31,8 @@ const ManageSpots = () => {
                     const handleTileClick = () => {
                         navigate(`/spots/${spotTile.id}`);
                     }
+
+                    debugger;
                     return (
                         <div key={spotTile.id} className="spot-tile">
                             <div className="image-div" onClick={handleTileClick}>
@@ -40,7 +44,10 @@ const ManageSpots = () => {
                             </div>
                             <p className="price">{`$${spotTile.price}`} night</p>
                             <button onClick={() => navigate(`/spots/${spotTile.id}/edit`)}>Update</button>
-                            <button>Delete</button>
+                            <OpenModalButton
+                            buttonText="Delete"
+                            modalComponent={<DeleteSpot spotId={spotTile.id}/>}
+                            />
                         </div>
                     )
                 })}
