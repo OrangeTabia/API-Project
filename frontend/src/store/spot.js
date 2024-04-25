@@ -8,6 +8,7 @@ const ADD_IMAGE = '/spots/addImage';
 const REMOVE_SPOT = '/spots/removeSpot'; 
 const LOAD_REVIEWS = 'spots/loadReviews'; 
 const ADD_REVIEW = '/spots/addReview'; 
+const REMOVE_REVIEW = 'spots/removeReview';
 
 
 /**  Action Creators: */
@@ -48,6 +49,10 @@ export const removeSpot = (spotId) => ({
     spotId
 }); 
 
+export const removeReview = (reviewId) => ({
+    type: REMOVE_REVIEW, 
+    reviewId
+}); 
 
 /** Thunk Action Creators: */
 export const fetchSpots = () => async (dispatch) => {
@@ -60,12 +65,6 @@ export const fetchSpotDetails = (spotId) => async (dispatch) => {
     const response = await fetch(`/api/spots/${spotId}`); 
     const spotDetails = await response.json(); 
     dispatch(receiveSpot(spotDetails)); 
-}
-
-export const fetchReviews = (spotId) => async (dispatch) => {
-    const response = await fetch(`/api/spots/${spotId}/reviews`);
-    const allReviews = await response.json(); 
-    dispatch(loadReviews(allReviews)); 
 }
 
 export const fetchCreateSpot = (spot) => async (dispatch) => {
@@ -116,6 +115,31 @@ export const fetchAddImage = (imageInfo, spotId) => async (dispatch) => {
     }
 }
 
+export const fetchLoadCurrentUserSpots = () => async (dispatch) => {
+    const response = await fetch('/api/spots/current'); 
+    const spots = await response.json(); 
+    dispatch(loadSpots(spots)); 
+ }
+
+export const fetchDeleteSpot = (spotId) => async (dispatch) => {
+    const response = await csrfFetch(`/api/spots/${spotId}`, {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'},
+    }); 
+    if (response.ok) {
+        dispatch(removeSpot(spotId)); 
+    } else {
+        const errors = await response.json();
+        return errors;
+    }
+}
+
+export const fetchReviews = (spotId) => async (dispatch) => {
+    const response = await fetch(`/api/spots/${spotId}/reviews`);
+    const allReviews = await response.json(); 
+    dispatch(loadReviews(allReviews)); 
+}
+
 export const fetchAddReview = (review, spotId, currentUser) => async (dispatch) => {
     const response = await csrfFetch(`/api/spots/${spotId}/reviews`, {
         method: 'POST',
@@ -133,21 +157,15 @@ export const fetchAddReview = (review, spotId, currentUser) => async (dispatch) 
     }
 }
 
-export const fetchLoadCurrentUserSpots = () => async (dispatch) => {
-    const response = await fetch('/api/spots/current'); 
-    const spots = await response.json(); 
-    dispatch(loadSpots(spots)); 
- }
-
-export const fetchDeleteSpot = (spotId) => async (dispatch) => {
-    const response = await csrfFetch(`/api/spots/${spotId}`, {
+export const fetchDeleteReview = (reviewId) => async (dispatch) => {
+    const response = await csrfFetch(`/api/reviews/${reviewId}`, {
         method: 'DELETE',
-        headers: {'Content-Type': 'application/json'},
-    }); 
+        headers: {'Content-Type': 'application/json'}
+    });
     if (response.ok) {
-        dispatch(removeSpot(spotId)); 
+        dispatch(removeReview(reviewId));
     } else {
-        const errors = await response.json();
+        const errors = response.json(); 
         return errors;
     }
 }
@@ -186,6 +204,11 @@ function spotReducer(state = initialState, action) {
         case REMOVE_SPOT: {
             const newState = {...state};
             delete newState[action.spotId];
+            return newState;
+        }
+        case REMOVE_REVIEW : {
+            const newState = {...state};
+            delete newState[action.reveiwId];
             return newState;
         }
 

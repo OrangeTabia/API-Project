@@ -6,6 +6,7 @@ import { fetchReviews } from '../../store/spot';
 import { MdStarRate } from "react-icons/md";
 import OpenModalButton from '../OpenModalButton';
 import CreateReview from './CreateReview'; 
+import DeleteReview from './DeleteReview';
 import './SpotDetails.css'; 
 
 const SpotDetails = () => {
@@ -106,6 +107,11 @@ const SpotDetails = () => {
                                 <h4 className="reviewer-name">{review.User.firstName}</h4>
                                 <h4 className="review-date">{convertDate(review.createdAt)}</h4>
                                 <p className="review-description">{review.review}</p>
+                                {/* only the currnet user who is the reviewer should see the button */}
+                                <OpenModalButton
+                                buttonText="Delete"
+                                modalComponent={<DeleteReview reviewId={review.id} spotId={spotId}/>}
+                                />
                             </div>
                         ))}
                     </div>

@@ -6,8 +6,6 @@ const DeleteSpot = ({spotId}) => {
     const { closeModal } = useModal(); 
     const dispatch = useDispatch();  
 
-    debugger;
-
     const handleDelete = async (e) => {
         e.preventDefault();
         await dispatch(fetchDeleteSpot(spotId)); 
