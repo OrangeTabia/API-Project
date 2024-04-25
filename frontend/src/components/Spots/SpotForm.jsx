@@ -101,6 +101,7 @@ const SpotForm = ({ spot, formType}) => {
             }
             // If we're creating the spot, POST a new spot then navigate
             // to the page that will display it
+            // POST NEW SPOT
             if (formType === 'Create Spot') {
                 // Create the spot
                 const newSpot = await dispatch(fetchCreateSpot(spot));
@@ -114,7 +115,6 @@ const SpotForm = ({ spot, formType}) => {
                     imageFour
                 ].filter((image) => image != null); 
 
-
                 await Promise.all(images.map(async (image, index) => { 
                     let imageInfo = { 
                         url: image,
@@ -127,8 +127,25 @@ const SpotForm = ({ spot, formType}) => {
                 navigate(`/spots/${newSpot.id}`); 
             }
 
+            // UPDATE SPOT
             if (formType === 'Update Spot') {
                 const updatedSpot = await dispatch(fetchEditSpot(spot, spot.id));
+
+                let images = [
+                    previewImage, 
+                    imageOne,
+                    imageTwo, 
+                    imageThree,
+                    imageFour
+                ].filter((image) => image != null); 
+
+                await Promise.all(images.map(async (image, index) => { 
+                    let imageInfo = { 
+                        url: image,
+                        preview: index == 0
+                    }
+                    await dispatch(fetchAddImage(imageInfo, updatedSpot.id)); 
+                }));
                 navigate(`/spots/${updatedSpot.id}`); 
             }
         }

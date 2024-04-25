@@ -3,10 +3,12 @@
 /** Action Type Constants: */
 const LOAD_SPOTS = 'spots/loadSpots'; 
 const RECEIVE_SPOT = 'spots/receiveSpot';
-const LOAD_REVIEWS = 'spots/loadReviews';
-const CREATE_SPOT = 'spots/createSpot'; 
+const CREATE_SPOT = 'spots/createSpot';
 const ADD_IMAGE = '/spots/addImage'; 
+
+const LOAD_REVIEWS = 'spots/loadReviews'; 
 const ADD_REVIEW = '/spots/addReview'; 
+
 
 /**  Action Creators: */
 export const loadSpots = (spots) => ({
@@ -19,11 +21,6 @@ export const receiveSpot = (spot) => ({
     spot
 });
 
-export const loadReviews = (reviews) => ({
-    type: LOAD_REVIEWS,
-    reviews
-});
-
 export const addSpot = (spot) => ({
     type: CREATE_SPOT,
     spot
@@ -32,6 +29,12 @@ export const addSpot = (spot) => ({
 export const addImage = (image) => ({
     type: ADD_IMAGE, 
     image
+});
+
+
+export const loadReviews = (reviews) => ({
+    type: LOAD_REVIEWS,
+    reviews
 });
 
 export const addReview = (review) => ({
@@ -155,9 +158,7 @@ function spotReducer(state = initialState, action) {
         case ADD_REVIEW: {
             return {...state, [action.spot.id]: action.review}
         }
-        // case LOAD_CURRENT_SPOTS: {
-        //     return {...state, ...action.spots}
-        // }
+
 
         default:
             return state;

@@ -6,6 +6,7 @@ import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
 import { NavLink } from 'react-router-dom'; 
 import './ProfileButton.css';  
+import BearBnbLogin from '../../../../images/bearbnb-login-button.png';
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
@@ -43,8 +44,9 @@ function ProfileButton({ user }) {
 
   return (
     <div className="dropdown-div">
-      <button onClick={toggleMenu}>
-        <i className="fas fa-user-circle" />
+      <button className="background-modal" onClick={toggleMenu}>
+        <img className="modal-button" src={BearBnbLogin} alt="bear modal button"/>
+        {/* <i className="fas fa-user-circle" /> */}
       </button>
       <div className={ulClassName} ref={ulRef}>
         {user ? (

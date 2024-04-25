@@ -26,10 +26,13 @@ header {
 .right-navigation {
   display: flex;
   flex-direction: row;
+  align-items: center;
   gap: 50px;
   /* border: 1px solid red; */
 }
 
 hr {
   margin-top: 20px;
+  height: 0.5px;
+  color: lightgray;
 }

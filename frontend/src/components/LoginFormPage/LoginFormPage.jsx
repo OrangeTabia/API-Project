@@ -50,7 +50,7 @@ function LoginFormPage() {
             />
           </label>
           {errors.credential && <p>{errors.credential}</p>}
-          <button type="submit" disabled={Object.values(errors).length > 0}>Log In</button>
+          <button type="submit">Log In</button>
         </div>
       </form>
     </>

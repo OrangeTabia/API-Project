@@ -1,3 +1,18 @@
+.background-modal {
+    border: 1px solid lightgrey;
+    border-radius: 40px;
+    background-color: transparent;
+}
+
+.background-modal:hover {
+    cursor: pointer;
+    box-shadow: 2px 2px 4px lightgrey;
+}
+
+.modal-button {
+    background-color: transparent;
+}
+
 .profile-dropdown:hover {
     cursor: pointer;
 }

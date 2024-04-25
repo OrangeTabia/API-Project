@@ -7,23 +7,27 @@ import { MdStarRate } from "react-icons/md";
 const ManageSpots = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate(); 
-    const spotsInfo = useSelector(state => state.spot.Spots); 
-
-    console.log("Spots info", spotsInfo);
+    const currentUserSpots = useSelector(state => state.spot.Spots); 
 
     useEffect(() => {
         dispatch(fetchLoadCurrentUserSpots()); 
     }, [dispatch])
  
+    const noExistingSpots = currentUserSpots?.length <= 0;  
 
     return (
         <>
             <h1>Manage Spots</h1>
-            <button>Create a New Spot</button>
+
+            {noExistingSpots && 
+            <NavLink to="/spots">
+                <button>Create a New Spot</button>
+            </NavLink>}
+
             <div className="current-spots-div">
-                {spotsInfo?.map((spotTile) => {
+                {currentUserSpots?.map((spotTile) => {
                     const handleTileClick = () => {
-                        navigate(`spots/${spotTile.id}`);
+                        navigate(`/spots/${spotTile.id}`);
                     }
                     return (
                         <div key={spotTile.id} className="spot-tile" onClick={handleTileClick}>
@@ -35,7 +39,7 @@ const ManageSpots = () => {
                                 <span><MdStarRate />{(spotTile.avgRating != 0)? `${(spotTile.avgRating).toFixed(1)}` : 'New'}</span>
                             </div>
                             <p className="price">{`$${spotTile.price}`} night</p>
-                            <NavLink to="/spots">
+                            <NavLink>
                                 <button>Update</button>
                             </NavLink>
                             <NavLink>
