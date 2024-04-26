@@ -16,9 +16,12 @@ const SpotDetails = () => {
     const imagesInfo = useSelector(state => state.spot.SpotImages); 
     const spotInfo = useSelector(state => state.spot); 
     const reviewsInfo = useSelector(state => state.spot.Reviews);
-    const currentUser = useSelector(state => state.session?.user);
+    const currentUser = useSelector(state => state.session.user);
     const previewImage = imagesInfo?.find((image) => image.preview == true);
     const images = imagesInfo?.filter((image) => image.preview == false); 
+
+
+    console.log("SPOT INFO", spotInfo); 
 
     useEffect(() => {
         dispatch(fetchSpotDetails(spotId));
@@ -59,7 +62,7 @@ const SpotDetails = () => {
     let canReview = reviewsInfo?.find((review) => review.userId == currentUser?.id) == undefined;
     // Create a boolean to represent whether a current user is the owner
     let notOwner = currentUser?.id !== ownerInfo?.id;
-    let numRev = spotInfo.numReviews;
+    let numRev = spotInfo?.numReviews;
 
     return (
         <>
