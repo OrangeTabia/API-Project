@@ -13,19 +13,7 @@
     background-color: transparent;
 }
 
-.profile-dropdown:hover {
-    cursor: pointer;
-}
-
-.login-signup {
-    background-color: lightgrey;
-}
-
-.login-signup:hover {
-    cursor: pointer;
-}
-
-.user-info {
+.profile-dropdown {
     margin-top: 10px;
     background-color: white;
     display: flex;
@@ -33,9 +21,23 @@
     align-items: center;
     width: 180px;
     margin-left: -80px;
-    border: 1px solid F4F4F4;
-    border-radius: 15px;
+    border: 1px solid #F4F4F4;
+    border-radius: 10px;
     box-shadow: 2px 2px 5px 3px rgb(227, 227, 227);
+}
+
+.profile-dropdown:hover {
+    cursor: pointer;
+}
+
+.login-signup {
+    width: 180px;
+    text-align: center;
+}
+
+.login-signup:hover {
+    cursor: pointer;
+    background-color: #F4F4F4;
 }
 
 .email-greeting {
@@ -54,6 +56,16 @@
     justify-content: center;
     align-items: center;
     color: black;
+    height: 35px;
+    width: 120px;
+    text-decoration: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 50px;
+}
+
+.manage-spots-button:hover {
+    background-color: #F4F4F4;
 }
 
 .logout-button {
@@ -62,12 +74,14 @@
     align-items: center;
     color: white;
     background-color: #3f7043;
-    border-radius: 20px;
-    width: 75px;
-    height: 25px;
+    border: none;
+    border-radius: 25px;
+    width: 80px;
+    height: 35px;
     margin-bottom: 10px;
 }
 
 .logout-button:hover {
     cursor: pointer;
+    background-color: forestgreen;
 }
