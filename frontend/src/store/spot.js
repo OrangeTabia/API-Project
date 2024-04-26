@@ -184,7 +184,6 @@ function spotReducer(state = initialState, action) {
         }
         case LOAD_REVIEWS: {
             // Order them by the created at descending
-            debugger;
             return {...state, 
                 Reviews: [...action.reviews.Reviews.sort((review1, review2) => { 
                     // TODO: Use createdAt
