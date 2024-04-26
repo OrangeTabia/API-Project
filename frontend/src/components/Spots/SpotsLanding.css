@@ -1,19 +1,28 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
 .all-spots-div {
     display: flex;
-    flex-direction: row;
     flex-wrap: wrap;
-    gap: 40px;
-    margin-left: 100px;
-    margin-right: 100px;
-    /* border: 1px solid blue; */
+    flex: 0 0 25%;
+    padding: 20px;
+    gap: 30px;
+    /* width: fit-content; */
+    /* display: grid;
+    grid-template-columns: auto auto auto auto;
+    grid-gap: 20px;
+    grid-template-rows: auto;
+    justify-content: space-evenly; */
+    border: 1px solid blue;
 }
 
 .spot-tile {
     display: flex;
     flex-direction: column;
-    width: 300px;
-    margin-top: 30px;
-    /* border: 1px solid red; */
+    width: 380px;
+    margin-top: 50px;
+    border: 1px solid red;
 }
 
 .spot-tile:hover {
@@ -22,11 +31,22 @@
 
 .spot-image {
     width: 100%;
+    height: 300px;
+    border-radius: 30px;
 }
 
 .city-state-ratings {
     display: flex;
     justify-content: space-between;
+    padding-top: 5px;
+}
+
+.price-per-night {
+    padding-top: 5px;
+}
+
+.price {
+    font-weight: bold;
 }
 
 

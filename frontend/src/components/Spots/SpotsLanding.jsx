@@ -30,7 +30,10 @@ const DisplayAllSpots = () => {
                                 <span>{`${spotTile.city}, ${spotTile.state}`}</span>
                                 <span><MdStarRate />{(spotTile.avgRating != 0)? `${(spotTile.avgRating).toFixed(1)}` : 'New'}</span>
                             </div>
-                            <p className="price">{`$${spotTile.price}`} night</p>
+                            <div className="price-per-night">    
+                                <span className="price">{`$${spotTile.price} `}</span>
+                                <span className="night">night</span>
+                            </div>
                         </div>
                     )
                 })}
