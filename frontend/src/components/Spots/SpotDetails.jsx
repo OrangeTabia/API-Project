@@ -16,9 +16,12 @@ const SpotDetails = () => {
     const imagesInfo = useSelector(state => state.spot.SpotImages); 
     const spotInfo = useSelector(state => state.spot); 
     const reviewsInfo = useSelector(state => state.spot.Reviews);
-    const currentUser = useSelector(state => state.session?.user);
+    const currentUser = useSelector(state => state.session.user);
     const previewImage = imagesInfo?.find((image) => image.preview == true);
     const images = imagesInfo?.filter((image) => image.preview == false); 
+
+
+    console.log("SPOT INFO", spotInfo); 
 
     useEffect(() => {
         dispatch(fetchSpotDetails(spotId));
@@ -59,7 +62,7 @@ const SpotDetails = () => {
     let canReview = reviewsInfo?.find((review) => review.userId == currentUser?.id) == undefined;
     // Create a boolean to represent whether a current user is the owner
     let notOwner = currentUser?.id !== ownerInfo?.id;
-    let numRev = spotInfo.numReviews;
+    let numRev = spotInfo?.numReviews;
 
     return (
         <>
@@ -74,7 +77,7 @@ const SpotDetails = () => {
                     </div>
                     <div className="right-images-div">
                         {images?.map((image) => (
-                            <img className="right-images" src={image?.url} alt="tahoe-house"></img>
+                            <img key={image.id} className="right-images" src={image?.url} alt="tahoe-house"></img>
                         ))}
                     </div>
                 </div>
@@ -87,14 +90,14 @@ const SpotDetails = () => {
                         <div className="reserve-div">
                             <div className="price-reviews">
                                 <span className="price">{`$${spotInfo.price} night`}</span>
-                                <span className="star-rating-reviews"><MdStarRate />{spotInfo.avgRating ? `${(spotInfo?.avgRating).toFixed(1)} · ${numRev} ${numRev > 1 ? 'reviews': 'review'}` : 'New'}</span>
+                                <span className="star-rating-reviews"><MdStarRate />{spotInfo.avgRating ? `${(spotInfo.avgRating).toFixed(1)} · ${numRev} ${numRev > 1 ? 'reviews': 'review'}` : 'New'}</span>
                             </div>
                             <button className="reserve-button" onClick={reserveClick}>Reserve</button>
                         </div>
                     </div>
                     <hr></hr>
                     <div className="reviews">
-                        <span><MdStarRate />{numRev ? `${(spotInfo?.avgRating).toFixed(1)} · ${numRev} ${numRev > 1 ? 'reviews': 'review'}` : `${(spotInfo?.avgRating)}`}</span>
+                        <span><MdStarRate />{numRev ? `${(spotInfo.avgRating).toFixed(1)} · ${numRev} ${numRev > 1 ? 'reviews': 'review'}` : `${(spotInfo?.avgRating)}`}</span>
 
                         <br></br>
                         {canReview && notOwner && currentUser && (<OpenModalButton 
