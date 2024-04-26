@@ -12,16 +12,16 @@ import './SpotDetails.css';
 const SpotDetails = () => {
     const { spotId } = useParams();
     const dispatch = useDispatch();
-    const ownerInfo = useSelector(state => state.spot.Owner); 
-    const imagesInfo = useSelector(state => state.spot.SpotImages); 
     const spotInfo = useSelector(state => state.spot); 
-    const reviewsInfo = useSelector(state => state.spot.Reviews);
+    const ownerInfo = useSelector(state => state.spot?.Owner); 
+    const imagesInfo = useSelector(state => state.spot?.SpotImages); 
+    const reviewsInfo = useSelector(state => state.spot?.Reviews);
     const currentUser = useSelector(state => state.session.user);
     const previewImage = imagesInfo?.find((image) => image.preview == true);
     const images = imagesInfo?.filter((image) => image.preview == false); 
 
 
-    console.log("SPOT INFO", spotInfo); 
+
 
     useEffect(() => {
         dispatch(fetchSpotDetails(spotId));
@@ -108,7 +108,7 @@ const SpotDetails = () => {
                             reviewsInfo?.map((review) => {
                                 // analyze each one to see if we can review!
                                 // A boolean to represent whether a current user can delete their review
-                                let canDeleteReview = review.userId == currentUser.id; 
+                                let canDeleteReview = review.userId == currentUser?.id; 
 
                                 return (
                                 <div key={review.id}>

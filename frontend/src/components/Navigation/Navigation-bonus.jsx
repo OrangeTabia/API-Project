@@ -18,7 +18,9 @@ function Navigation({ isLoaded }) {
           <div className="right-navigation">
             <div className="create-spot-button">
               {sessionUser && (
-                <NavLink to="/spots">Create a New Spot</NavLink>
+                <NavLink to="/spots">
+                  <button className="create-spot-link">Create a New Spot</button>
+                </NavLink>
               )}
             </div>
             <div className="profile-button">
@@ -28,7 +30,7 @@ function Navigation({ isLoaded }) {
             </div>
           </div>
       </header>
-      <hr/>
+      <hr className="header-line"/>
     </>
 
   );

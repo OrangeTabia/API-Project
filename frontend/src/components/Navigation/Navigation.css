@@ -8,8 +8,7 @@
 }
 
 .bearbnb-logo {
-  width: 55%;
-  /* border: 1px solid red; */
+  width: 60%;
 }
 
 header {
@@ -20,7 +19,6 @@ header {
   margin-left: 100px;
   margin-right: 100px;
   margin-top: 10px;
-  /* border: 1px solid red; */
 }
 
 .right-navigation {
@@ -28,10 +26,23 @@ header {
   flex-direction: row;
   align-items: center;
   gap: 50px;
-  /* border: 1px solid red; */
 }
 
-hr {
+.create-spot-link {
+  background-color: transparent;
+  border: none;
+  height: 40px;
+  width: 140px;
+
+}
+
+.create-spot-link:hover {
+  background-color: #F4F4F4;
+  border-radius: 50px;
+  cursor: pointer;
+}
+
+.header-line {
   margin-top: 20px;
   height: 0.5px;
   color: lightgray;

@@ -183,8 +183,19 @@ function spotReducer(state = initialState, action) {
             return {...state, ...action.spot}
         }
         case LOAD_REVIEWS: {
-            // TODO: Add a sort statement here
-            return {...state, ...action.reviews}
+            // Order them by the created at descending
+            debugger;
+            return {...state, 
+                Reviews: [...action.reviews.Reviews.sort((review1, review2) => { 
+                    // TODO: Use createdAt
+                    if (review1.id < review2.id) {
+                        return 1
+                    } else { 
+                        return -1
+                    }
+
+                })]
+            }
         }
         case UPDATE_SPOT: {
             return {...state, [action.spot.id]: action.spot}

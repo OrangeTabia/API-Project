@@ -89,13 +89,13 @@
     cursor: pointer;
 }
 
-hr {
+/* hr {
     margin-top: 50px;
     margin-bottom: 20px;
     height: 2px;
     color: black;
     background-color: black;
-}
+} */
 
 .reviewer-name {
     margin-top: 20px;
