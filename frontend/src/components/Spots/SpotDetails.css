@@ -1,20 +1,23 @@
 .spot-details-div {
-    margin-left: 350px;
-    margin-right: 350px;
+    margin-left: 100px;
+    margin-right: 100px;
+}
+
+.images-description-reserve {
+    display: flex;
+    flex-direction: column;
+    margin-top: 25px;
 }
 
 .spot-images {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    height: 500px;
     gap: 10px;
-    margin-top: 25px;
 }
 
 .left-image-div {
     display: flex;
-    flex-direction: row;
     width: 50%;
 }
 
@@ -63,21 +66,13 @@
 
 .price-reviews {
     display: flex;
-    width: 300px;
-    gap: 135px;
+    justify-content: space-around;
+    width: 100%;
     padding-top: 25px;
 }
 
-.price {
-    font-size: 22px;
-}
-
-.star-rating-reviews {
-    font-size: 18px;
-}
-
 .reserve-button {
-    width: 300px;
+    width: 80%;
     height: 50px;
     margin-bottom: 25px;
     color: white;
@@ -89,6 +84,34 @@
 .reserve-button:hover {
     cursor: pointer;
     background-color: forestgreen;
+}
+
+.price {
+    font-size: 22px;
+}
+
+.star-rating-reviews {
+    font-size: 18px;
+}
+
+.star-and-reviews {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.reviewer-name {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.review-date {
+    color: darkgray;
+    font-size: 16px;
+}
+
+.review-description {
+    font-size: 14px;
+    font-weight: normal;
 }
 
 .modal-button {
@@ -155,10 +178,49 @@
     margin-bottom: 8px;
 }
 
+.delete-modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+
+}
+
+.confirm-delete {
+    margin-top: 10px;
+    margin-bottom: 4px;
+}
+
+.review-delete-button {
+    margin-top: 12px;
+    height: 45px;
+    width: 100%;
+    margin-bottom: 12px;
+    color: white;
+    background-color: #3f7043;
+    border-radius: 10px;
+    border: none;
+}
+
+.review-delete-button:hover {
+    cursor: pointer;
+    background-color: forestgreen;
+}
+
+.review-keep-button {
+    height: 45px;
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+.review-keep-button:hover {
+    cursor: pointer;
+    background-color: darkgray;
+}
+
 .footer-line {
     margin-top: 100px;
-    margin-left: 350px;
-    margin-right: 350px;
 }
 
 footer {

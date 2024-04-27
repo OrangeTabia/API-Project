@@ -83,17 +83,19 @@ const SpotDetails = () => {
                     <h1>{spotInfo.name}</h1>
                     <h3>{`${spotInfo.city}, ${spotInfo.state}, ${spotInfo.country}`}</h3>
                 </div>
-                <div className="spot-images">
-                    <div className="left-image-div">
-                        <img className="left-image" src={previewImage?.url} alt="tahoe-house"></img>
+
+                <div className="images-description-reserve">
+                    <div className="spot-images">
+                        <div className="left-image-div">
+                            <img className="left-image" src={previewImage?.url} alt="tahoe-house"></img>
+                        </div>
+                        <div className="right-images-div">
+                            {images?.map((image) => (
+                                <img key={image.id} className="right-images" src={image?.url} alt="tahoe-house"></img>
+                            ))}
+                        </div>
                     </div>
-                    <div className="right-images-div">
-                        {images?.map((image) => (
-                            <img key={image.id} className="right-images" src={image?.url} alt="tahoe-house"></img>
-                        ))}
-                    </div>
-                </div>
-                <div className="spot-info-and-reviews">
+
                     <div className="host-description-reserve">
                         <div className="hostname-description">
                             <h2>{`Hosted by ${ownerInfo?.firstName} ${ownerInfo?.lastName}`}</h2>
@@ -107,40 +109,42 @@ const SpotDetails = () => {
                             <button className="reserve-button" onClick={reserveClick}>Reserve</button>
                         </div>
                     </div>
-                    <hr></hr>
-                    <div className="reviews">
-                        <span><MdStarRate />{numRev ? `${(spotInfo.avgRating).toFixed(1)} · ${numRev} ${numRev > 1 ? 'reviews': 'review'}` : 'New'}</span>
+                </div>
 
-                        <br></br>
 
-                        {canReview && notOwner && currentUser && (
-                            <OpenModalButton 
-                            buttonText= {spotInfo.numReviews == 0 ? 'Be the first to post a review!' : "Post Your Review"}
-                            modalComponent={<CreateReview />}
-                            />
-                            )}
-                        {
-                            reviewsInfo?.map((review) => {
-                                // analyze each one to see if we can review!
-                                // A boolean to represent whether a current user can delete their review
-                                let canDeleteReview = review.userId == currentUser?.id; 
+                <hr></hr>
+                <div className="star-and-reviews">
+                    <span><MdStarRate />{numRev ? `${(spotInfo.avgRating).toFixed(1)} · ${numRev} ${numRev > 1 ? 'reviews': 'review'}` : 'New'}</span>
 
-                                return (
-                                <div key={review.id}>
-                                    <h4 className="reviewer-name">{review.User.firstName}</h4>
-                                    <h4 className="review-date">{convertDate(review.createdAt)}</h4>
-                                    <p className="review-description">{review.review}</p>
-                                    {canDeleteReview && (
-                                        <OpenModalButton
-                                        buttonText="Delete"
-                                        modalComponent={<DeleteReview reviewId={review.id} spotId={spotId}/>}
-                                        />
-                                    )}
-                                </div>
-                                )
-                            })
-                        }
-                    </div>
+                    <br></br>
+
+                    {canReview && notOwner && currentUser && (
+                        <OpenModalButton 
+                        buttonText= {spotInfo.numReviews == 0 ? 'Be the first to post a review!' : "Post Your Review"}
+                        modalComponent={<CreateReview />}
+                        />
+                        )}
+                    {
+                        reviewsInfo?.map((review) => {
+                            // analyze each one to see if we can review!
+                            // A boolean to represent whether a current user can delete their review
+                            let canDeleteReview = review.userId == currentUser?.id; 
+
+                            return (
+                            <div key={review.id}>
+                                <h4 className="reviewer-name">{review.User.firstName}</h4>
+                                <h4 className="review-date">{convertDate(review.createdAt)}</h4>
+                                <p className="review-description">{review.review}</p>
+                                {canDeleteReview && (
+                                    <OpenModalButton
+                                    buttonText="Delete"
+                                    modalComponent={<DeleteReview reviewId={review.id} spotId={spotId}/>}
+                                    />
+                                )}
+                            </div>
+                            )
+                        })
+                    }
                 </div>
             </div>
             <hr className="footer-line"></hr>
