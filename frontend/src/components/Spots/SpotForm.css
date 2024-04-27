@@ -2,3 +2,132 @@
     color: red;
     font-size: 13px;
 }
+
+.form {
+    display: flex;
+    justify-content: center;
+}
+
+.form-size {
+    width: 35%;
+    /* border: 1px solid red; */
+}
+
+h3 {
+    margin-bottom: 3px;
+}
+
+.location-description {
+    margin-top: 0px;
+}
+
+.regular-input {
+    width: 95%;
+    height: 2%;
+}
+
+.city-state {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    padding-right: 10px;
+    height: 5%;
+}
+
+.city-input {
+    width: 100%;
+    height: 36%;
+}
+
+.city {
+    width: 70%;
+}
+
+.city-comma {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.state {
+    width: 35%;
+}
+
+.state-input {
+    width: 95%;
+    height: 36%;
+}
+
+.lat-lng {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    padding-right: 10px;
+    height: 5%;
+}
+
+.lat {
+    width: 100%;
+}
+
+.lat-input, .lng-input {
+    width: 97%;
+    height: 36%;
+}
+
+.latlng-comma {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.lng {
+    width: 100%;
+}
+
+.form-line {
+    height: 2px;
+    background-color: black;
+}
+
+.textarea-description {
+    width: 96%;
+    height: 10%;
+}
+
+.price-input {
+    width: 93%;
+    height: 2%
+}
+
+.create-button-div {
+    display: flex;
+    justify-content: center;
+}
+
+.create-button {
+    height: 45px;
+    width: 150px;
+    background-color: #3f7043;
+    color: white;
+    border-radius: 10px;
+    border: none;
+}
+
+.create-button:hover {
+    cursor: pointer;
+    background-color: forestgreen;
+}
+
+.footer-form-line {
+    margin-top: 20px;
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 50px;
+}
