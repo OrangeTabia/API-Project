@@ -45,7 +45,7 @@ function ProfileButton({ user }) {
   return (
     <div className="dropdown-div">
       <button className="background-modal" onClick={toggleMenu}>
-        <img className="modal-button" src={BearBnbLogin} alt="bear modal button"/>
+        <img src={BearBnbLogin} alt="bear modal button"/>
       </button>
       <div className={ulClassName} ref={ulRef}>
         {user ? (

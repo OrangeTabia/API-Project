@@ -7,6 +7,7 @@ import { MdStarRate } from "react-icons/md";
 import OpenModalButton from '../OpenModalButton';
 import CreateReview from './CreateReview'; 
 import DeleteReview from './DeleteReview';
+import { LiaCopyright } from "react-icons/lia";
 import './SpotDetails.css'; 
 
 const SpotDetails = () => {
@@ -53,6 +54,7 @@ const SpotDetails = () => {
         return `${month} ${date.substring(0,4)}`
     }
 
+    // alert for reserve button
     const reserveClick = () => {
         alert('Feature coming soon!'); 
     }
@@ -63,6 +65,16 @@ const SpotDetails = () => {
     // Create a boolean to represent whether a current user is the owner
     let notOwner = currentUser?.id !== ownerInfo?.id;
     let numRev = spotInfo?.numReviews;
+
+
+    // css for modal review button
+    const reviewButtonStyles = {
+        content: {
+            maringTop: '30px',
+            border: '3px solid red',
+            backgroundColor: 'blue'
+        }
+    }
 
     return (
         <>
@@ -97,13 +109,16 @@ const SpotDetails = () => {
                     </div>
                     <hr></hr>
                     <div className="reviews">
-                        <span><MdStarRate />{numRev ? `${(spotInfo.avgRating).toFixed(1)} · ${numRev} ${numRev > 1 ? 'reviews': 'review'}` : `${(spotInfo?.avgRating)}`}</span>
+                        <span><MdStarRate />{numRev ? `${(spotInfo.avgRating).toFixed(1)} · ${numRev} ${numRev > 1 ? 'reviews': 'review'}` : 'New'}</span>
 
                         <br></br>
-                        {canReview && notOwner && currentUser && (<OpenModalButton 
+
+                        {canReview && notOwner && currentUser && (
+                            <OpenModalButton 
                             buttonText= {spotInfo.numReviews == 0 ? 'Be the first to post a review!' : "Post Your Review"}
                             modalComponent={<CreateReview />}
-                        />)}
+                            />
+                            )}
                         {
                             reviewsInfo?.map((review) => {
                                 // analyze each one to see if we can review!
@@ -128,6 +143,10 @@ const SpotDetails = () => {
                     </div>
                 </div>
             </div>
+            <hr className="footer-line"></hr>
+            <footer>
+                <span><LiaCopyright /> 2024 Tabia Ye</span>
+            </footer>
         </>
     )
 }

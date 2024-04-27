@@ -1,7 +1,7 @@
 import { IoIosStarOutline } from "react-icons/io";
 import { IoIosStar } from "react-icons/io";
 import { useState, useEffect } from 'react'; 
-import './ReviewRatingInput.css';
+import './SpotDetails.css';
 
 const StarRatingsInput = ({
     changeStars, 
@@ -17,7 +17,7 @@ const StarRatingsInput = ({
         <div className="rating-input">
           <div 
             className="star-1"
-            onMouseEnter={() => setStarRating(1)}
+            onMouseEnter={() => setStarRating(<IoIosStar />)}
             onMouseLeave={() =>  setStarRating(0)}
             onClick={() => changeStars(1)}
           >
@@ -55,7 +55,7 @@ const StarRatingsInput = ({
           >
             {stars >= 5 ? <IoIosStar /> : <IoIosStarOutline />}
           </div>
-          <span>Stars</span>
+          <span>&nbsp; Stars</span>
       </div>
     )
 }

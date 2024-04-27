@@ -9,10 +9,6 @@
     box-shadow: 2px 2px 4px lightgrey;
 }
 
-.modal-button {
-    background-color: transparent;
-}
-
 .profile-dropdown {
     margin-top: 10px;
     background-color: white;
@@ -66,6 +62,7 @@
 
 .manage-spots-button:hover {
     background-color: #F4F4F4;
+    cursor: pointer;
 }
 
 .logout-button {
@@ -75,7 +72,7 @@
     color: white;
     background-color: #3f7043;
     border: none;
-    border-radius: 25px;
+    border-radius: 10px;
     width: 80px;
     height: 35px;
     margin-bottom: 10px;

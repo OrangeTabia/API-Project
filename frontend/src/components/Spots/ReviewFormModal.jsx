@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchAddReview, fetchSpotDetails } from '../../store/spot';
 import { useModal } from '../../context/Modal';
 import ReviewsRatingInput from './ReviewsRatingInput';
+import './SpotDetails.css'; 
 
 const ReviewForm = () => {
     const navigate = useNavigate();
@@ -46,8 +47,7 @@ const ReviewForm = () => {
     }; 
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div className="review-form">
+        <form onSubmit={handleSubmit} className="review-form">
                 <h1>How was your stay?</h1>
                 <div className="errors">
                 {hasSubmitted && errors.review}
@@ -58,7 +58,7 @@ const ReviewForm = () => {
                     className="review-area"
                     rows="6" 
                     cols="30"
-                    placeholder="Just a quick review."
+                    placeholder="Leave your review here..."
                     onChange={(e) => setReview(e.target.value)}
                 >
                 </textarea>
@@ -68,10 +68,9 @@ const ReviewForm = () => {
                         stars={stars}
                     />
                 </div>
-                <button className="submit-button" type="submit" onClick={(e) => { 
+                <button className="review-submit-button" type="submit" onClick={(e) => { 
                     handleSubmit(e).then(closeModal());
                 }} disabled={Object.values(errors).length > 0}>Submit Your Review</button>
-            </div>
         </form>
     )
  }
