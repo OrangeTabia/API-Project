@@ -14,48 +14,89 @@ function SignupFormModal() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
+  const [hasSubmitted, setSubmitted] = useState(false);
 
-  // useEffect(() => {
-  //   const errors = {};
-  //   if (!email) errors.email = "";
-  //   if (username.length < 4) errors.username = "";
-  //   if (!firstName) errors.firstName = "";
-  //   if (!lastName) errors.lastName = "";
-  //   if (password.length < 6) errors.password = "";
-  //   if (!confirmPassword) errors.confirmPassword = "";
-  //   setErrors(errors); 
-  // }, [email, username, firstName, lastName, password, confirmPassword]);
+  // Front end errors only
+  useEffect(() => {
+    if (hasSubmitted) {
+      // Ensure the passwords match
+      if (password !== confirmPassword) {
+        errors.confirmPassword = "Confirm Password field must be the same as the Password field";
+      } else { 
+        delete errors.confirmPassword;
+      }
+
+      // Ensure the password length is acceptable
+      if (password.length < 6) { 
+        errors.password = "Password must be 6 characters or more"
+      } else { 
+        delete errors.password
+      };
+
+      // Ensure that the username has a proper length
+     if (username.length < 4) { 
+       errors.nameLength = "Username must be at least 4 characters"
+     } else { 
+        delete errors.nameLength
+     };
+     debugger;
+    }
+    setErrors({...errors});
+  }, [
+    password, 
+    confirmPassword, 
+    username,
+    hasSubmitted
+  ])
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (password === confirmPassword) {
-      setErrors({});
-      return dispatch(
-        sessionActions.signup({
-          email,
-          username,
-          firstName,
-          lastName,
-          password
-        })
-      )
-        .then(closeModal)
-        .catch(async (res) => {
-          const data = await res.json();
-          if (data?.errors) {
-            setErrors(data.errors);
-          }
-        });
-    }
-    return setErrors({
-      confirmPassword: "Confirm Password field must be the same as the Password field"
-    });
+    // See if there are any errors associated with the username + backend
+    setSubmitted(true);
+
+    // Prevent there from being a dispatch when there are bad FE values
+    if ((password.length < 6) || username.length < 4 || password !== confirmPassword) return;
+
+    // Otherwise, try and create it
+    dispatch(
+      sessionActions.signup({
+        email,
+        username,
+        firstName,
+        lastName,
+        password
+      })
+    )
+      .then(closeModal)
+      .catch(async (res) => {
+        const data = await res.json();
+        if (data?.errors) {
+          setErrors({
+            ...data.errors,
+          });
+        }
+      });
   };
 
   return (
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={(e) => handleSubmit(e)}>
         <div className="sign-up-form-div">
           <h1>Sign Up</h1>
+          {
+            // If there are errors, map through all of the errors and render them all
+            errors && (
+              <div className="signup-errors">
+                {
+                  Object.values(errors).map((errorMessage) => (
+                    <li>{errorMessage}</li>
+                  ))
+                }
+              </div>
+            )
+          }
+          
+
           <label>
             Email
             <br></br>
@@ -67,7 +108,6 @@ function SignupFormModal() {
             />
           </label>
           <br></br>
-          {errors.email && <p>{errors.email}</p>}
           <label>
             Username
             <br></br>
@@ -79,7 +119,6 @@ function SignupFormModal() {
             />
           </label>
           <br></br>
-          {errors.username && <p>{errors.username}</p>}
           <label>
             First Name
             <br></br>
@@ -91,7 +130,6 @@ function SignupFormModal() {
             />
           </label>
           <br></br>
-          {errors && <p>{errors.firstName}</p>}
           <label>
             Last Name
             <br></br>
@@ -103,7 +141,6 @@ function SignupFormModal() {
             />
           </label>
           <br></br>
-          {errors && <p>{errors.lastName}</p>}
           <label>
             Password
             <br></br>
@@ -114,7 +151,6 @@ function SignupFormModal() {
               required
             />
           </label>
-          {errors && <p>{errors.password}</p>}
           <label>
             Confirm Password
             <br></br>
@@ -126,8 +162,11 @@ function SignupFormModal() {
             />
           </label>
           <br></br>
-          {errors && <p>{errors.confirmPassword}</p>}
-          <button className="signup-button" type="submit" disabled={Object.values(errors).length > 0}>Sign Up</button>
+          <button 
+          className="signup-button" 
+          type="submit" 
+          disabled={errors.confirmPassword || errors.password || errors.nameLength}
+          >Sign Up</button>
         </div>
       </form>
   );
