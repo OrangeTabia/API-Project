@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'; 
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux'; 
-import { fetchAddImage, fetchCreateSpot, fetchEditSpot } from '../../store/spot';
+import { fetchAddImage, fetchCreateSpot, fetchDeleteImage, fetchEditSpot } from '../../store/spot';
 import { LiaCopyright } from "react-icons/lia";
 import './SpotForm.css'; 
 
@@ -15,13 +15,16 @@ const SpotForm = ({ spot, formType}) => {
     const [lat, setLat] = useState(1);
     const [lng, setLng] = useState(1); 
     const [description, setDescription] = useState(spot?.description);
-    const [title, setTitle] = useState(spot?.title); 
+    const [name, setName] = useState(spot?.name); 
     const [price, setPrice] = useState(spot?.price); 
-    const [imageOne, setImageOne] = useState(null);
-    const [imageTwo, setImageTwo] = useState(null);
-    const [imageThree, setImageThree] = useState(null); 
-    const [imageFour, setImageFour] = useState(null); 
-    const [previewImage, setPreviewImage] = useState(null);
+    // These are the non preview images
+    const nonPreviewImages = spot?.SpotImages?.filter((image) => !image.preview);
+    const [imageOne, setImageOne] = useState(nonPreviewImages[0]?.url);
+    const [imageTwo, setImageTwo] = useState(nonPreviewImages[1]?.url);
+    const [imageThree, setImageThree] = useState(nonPreviewImages[2]?.url); 
+    const [imageFour, setImageFour] = useState(nonPreviewImages[3]?.url); 
+    // Call this the preview Image
+    const [previewImage, setPreviewImage] = useState(spot?.SpotImages?.find((image) => image.preview)?.url);
     const [errors, setErrors] = useState({}); 
     const [hasSubmitted, setHasSubmitted] = useState(false); 
 
@@ -32,7 +35,7 @@ const SpotForm = ({ spot, formType}) => {
         if (!city) errors.city = "City is required";
         if (!state) errors.state = "State is required";
         if (description.length < 30) errors.description = "Description needs a minimum of 30 chracters";
-        if (!title) errors.title = "Name is required";
+        if (!name) errors.name = "Name is required";
         if (!price) errors.price = "Price is required";
         if (!previewImage) errors.previewImage = "Preview image is required";
 
@@ -70,7 +73,7 @@ const SpotForm = ({ spot, formType}) => {
         city, 
         state, 
         description, 
-        title, 
+        name,
         price, 
         previewImage,
         imageOne, 
@@ -95,7 +98,7 @@ const SpotForm = ({ spot, formType}) => {
                 city,
                 state,
                 description,
-                name: title,
+                name,
                 price,
                 lat,
                 lng
@@ -142,6 +145,16 @@ const SpotForm = ({ spot, formType}) => {
                     imageFour
                 ].filter((image) => image != null); 
 
+                // Load all of the images associated with the spot 
+                const currentImages = spot.SpotImages;
+                
+                // Delete every single one with dispatches
+                await Promise.all(currentImages.map(async (image) => { 
+                    debugger;
+                    await dispatch(fetchDeleteImage(image.id)); 
+                }));
+
+                // Make new ones
                 await Promise.all(images.map(async (image, index) => { 
                     let imageInfo = { 
                         url: image,
@@ -265,12 +278,12 @@ const SpotForm = ({ spot, formType}) => {
                     <input 
                         className="regular-input"
                         type="text" 
-                        value={title}
+                        value={name}
                         placeholder="Name of your spot"
-                        onChange={(e) => setTitle(e.target.value)}
+                        onChange={(e) => setName(e.target.value)}
                     />
                 </label>
-                <div  className="errors">{hasSubmitted && errors.title}</div>
+                <div  className="errors">{hasSubmitted && errors.name}</div>
                 <br></br>
                 <hr className="form-line"></hr>
 
@@ -306,16 +319,24 @@ const SpotForm = ({ spot, formType}) => {
                     <div  className="errors">{hasSubmitted && errors.previewImage}</div>
                     <br></br>
 
-                    <input className="regular-input" type="text" placeholder="Image URL" onChange={(e) => setImageOne(e.target.value)}/>
+                    <input className="regular-input" type="text" placeholder="Image URL"
+                    value={imageOne} 
+                    onChange={(e) => setImageOne(e.target.value)}/>
                     <div  className="errors">{hasSubmitted && errors.imageOne}</div>
                     <br></br>
-                    <input className="regular-input" type="text" placeholder="Image URL" onChange={(e) => setImageTwo(e.target.value)}/>
+                    <input className="regular-input" type="text" placeholder="Image URL"
+                     value={imageTwo}
+                     onChange={(e) => setImageTwo(e.target.value)}/>
                     <div  className="errors">{hasSubmitted && errors.imageTwo}</div>
                     <br></br>
-                    <input className="regular-input" type="text" placeholder="Image URL" onChange={(e) => setImageThree(e.target.value)}/>
+                    <input className="regular-input" type="text" placeholder="Image URL" 
+                    value={imageThree}
+                    onChange={(e) => setImageThree(e.target.value)}/>
                     <div className="errors">{hasSubmitted && errors.imageThree}</div>
                     <br></br>
-                    <input className="regular-input" type="text" placeholder="Image URL" onChange={(e) => setImageFour(e.target.value)}/>
+                    <input className="regular-input" type="text" placeholder="Image URL" 
+                    value={imageFour}
+                    onChange={(e) => setImageFour(e.target.value)}/>
                     <div className="errors">{hasSubmitted && errors.imageFour}</div>
                     <br></br>
                 </label>

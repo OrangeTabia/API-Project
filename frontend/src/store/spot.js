@@ -5,6 +5,7 @@ const LOAD_SPOTS = 'spots/loadSpots';
 const RECEIVE_SPOT = 'spots/receiveSpot';
 const UPDATE_SPOT = 'spots/updateSpot';
 const ADD_IMAGE = '/spots/addImage'; 
+const REMOVE_IMAGE = 'spots/removeImage'; 
 const REMOVE_SPOT = '/spots/removeSpot'; 
 const LOAD_REVIEWS = 'spots/loadReviews'; 
 const ADD_REVIEW = '/spots/addReview'; 
@@ -32,6 +33,10 @@ export const addImage = (image) => ({
     image
 });
 
+export const removeImage = (imageId) => ({
+    type: REMOVE_IMAGE,
+    imageId
+});
 
 export const loadReviews = (reviews) => ({
     type: LOAD_REVIEWS,
@@ -109,6 +114,19 @@ export const fetchAddImage = (imageInfo, spotId) => async (dispatch) => {
         const newImage = await response.json();
         dispatch(addImage(newImage)); 
         return newImage;
+    } else {
+        const errors = await response.json();
+        return errors;
+    }
+}
+
+export const fetchDeleteImage = (imageId) => async (dispatch) => {
+    const response = await csrfFetch(`/api/spot-images/${imageId}`, {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'},
+    }); 
+    if (response.ok) {
+        dispatch(removeImage(imageId)); 
     } else {
         const errors = await response.json();
         return errors;
@@ -201,6 +219,11 @@ function spotReducer(state = initialState, action) {
         }
         case ADD_IMAGE: {
             return {...state, ...action.image}
+        }
+        case REMOVE_IMAGE : {
+            const newState = {...state}; 
+            delete newState[action.imageId];
+            return newState;
         }
         case ADD_REVIEW: {
             return {...state, Reviews: [
