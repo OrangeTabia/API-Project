@@ -67,15 +67,6 @@ const SpotDetails = () => {
     let numRev = spotInfo?.numReviews;
 
 
-    // css for modal review button
-    const reviewButtonStyles = {
-        content: {
-            maringTop: '30px',
-            border: '3px solid red',
-            backgroundColor: 'blue'
-        }
-    }
-
     return (
         <>
             <div className="spot-details-div">

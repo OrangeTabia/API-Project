@@ -18,7 +18,7 @@ const ManageSpots = () => {
         dispatch(fetchLoadCurrentUserSpots()); 
     }, [dispatch])
  
-    const noExistingSpots = currentUserSpots?.length <= 0;  
+    // const noExistingSpots = currentUserSpots?.length <= 0;  
 
     return (
         <div className="manage-spots-div">
