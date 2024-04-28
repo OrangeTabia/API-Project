@@ -54,7 +54,7 @@
     color: black;
     height: 35px;
     width: 120px;
-    text-decoration: none;
+    text-decoration: underline;
     background-color: transparent;
     border: none;
     border-radius: 50px;

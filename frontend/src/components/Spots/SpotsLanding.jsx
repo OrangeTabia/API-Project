@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react'; 
 import { fetchSpots } from '../../store/spot';
 import { MdStarRate } from "react-icons/md";
+import { LiaCopyright } from "react-icons/lia";
 import './SpotsLanding.css'; 
 
 const DisplayAllSpots = () => {
@@ -16,12 +17,13 @@ const DisplayAllSpots = () => {
 
     return (
         <>
-            <div className="all-spots-div">
-                {spotsInfo?.map((spotTile) => {
-                const handleTileClick = () => {
-                    navigate(`spots/${spotTile.id}`); 
-                }
-                return (
+            <div className="spot-center-div">
+                <div className="spot-align-div">
+                    {spotsInfo?.map((spotTile) => {
+                    const handleTileClick = () => {
+                        navigate(`spots/${spotTile.id}`); 
+                    }
+                    return (
                         <div key={spotTile.id} className="spot-tile" title={spotTile.name} onClick={handleTileClick}>
                             <div className="image-div">
                                 <img className="spot-image" src={spotTile.previewImage} alt="image thumbnail"/>
@@ -35,9 +37,14 @@ const DisplayAllSpots = () => {
                                 <span className="night">night</span>
                             </div>
                         </div>
-                    )
-                })}
+                        )
+                    })}
+                </div>
             </div>
+            <hr className="footer-line"></hr>
+            <footer>
+                <span><LiaCopyright /> 2024 Tabia Ye</span>
+            </footer>
         </>
     )
 }
