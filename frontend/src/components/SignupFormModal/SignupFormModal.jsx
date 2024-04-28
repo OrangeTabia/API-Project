@@ -21,9 +21,9 @@ function SignupFormModal() {
     if (hasSubmitted) {
       // Ensure the passwords match
       if (password !== confirmPassword) {
-        errors.confirmPassword = "Confirm Password field must be the same as the Password field";
+        errors.confirmPassword = "Confirm Password field must be the same as the Password field"
       } else { 
-        delete errors.confirmPassword;
+        delete errors.confirmPassword
       }
 
       // Ensure the password length is acceptable
@@ -31,22 +31,21 @@ function SignupFormModal() {
         errors.password = "Password must be 6 characters or more"
       } else { 
         delete errors.password
-      };
+      }
 
       // Ensure that the username has a proper length
      if (username.length < 4) { 
        errors.nameLength = "Username must be at least 4 characters"
      } else { 
         delete errors.nameLength
-     };
-     debugger;
+     }
     }
     setErrors({...errors});
   }, [
     password, 
     confirmPassword, 
     username,
-    hasSubmitted
+    hasSubmitted,
   ])
 
 
@@ -89,14 +88,14 @@ function SignupFormModal() {
               <div className="signup-errors">
                 {
                   Object.values(errors).map((errorMessage) => (
-                    <li>{errorMessage}</li>
+                    <li key={errorMessage.id}>{errorMessage}</li>
                   ))
                 }
               </div>
             )
           }
           
-
+          <br></br>
           <label>
             Email
             <br></br>

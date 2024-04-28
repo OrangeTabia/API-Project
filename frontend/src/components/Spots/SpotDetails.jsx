@@ -7,7 +7,6 @@ import { MdStarRate } from "react-icons/md";
 import OpenModalButton from '../OpenModalButton';
 import CreateReview from './CreateReview'; 
 import DeleteReview from './DeleteReview';
-import { LiaCopyright } from "react-icons/lia";
 import './SpotDetails.css'; 
 
 const SpotDetails = () => {
@@ -138,10 +137,10 @@ const SpotDetails = () => {
                     }
                 </div>
             </div>
-            <hr className="footer-line"></hr>
+            {/* <hr className="footer-line"></hr>
             <footer>
                 <span><LiaCopyright /> 2024 Tabia Ye</span>
-            </footer>
+            </footer> */}
         </>
     )
 }

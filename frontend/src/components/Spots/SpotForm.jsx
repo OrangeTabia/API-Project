@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux'; 
 import { fetchAddImage, fetchCreateSpot, fetchDeleteImage, fetchEditSpot } from '../../store/spot';
-import { LiaCopyright } from "react-icons/lia";
 import './SpotForm.css'; 
 
 const SpotForm = ({ spot, formType}) => {
@@ -150,7 +149,6 @@ const SpotForm = ({ spot, formType}) => {
                 
                 // Delete every single one with dispatches
                 await Promise.all(currentImages.map(async (image) => { 
-                    debugger;
                     await dispatch(fetchDeleteImage(image.id)); 
                 }));
 
@@ -347,10 +345,10 @@ const SpotForm = ({ spot, formType}) => {
                     <button className="create-button" type="submit">{formType}</button>
                 </div>
                 <br></br>
-                <hr className="footer-form-line"></hr>
+                {/* <hr className="footer-form-line"></hr>
                 <footer>
                     <span><LiaCopyright /> 2024 Tabia Ye</span>
-                </footer>
+                </footer> */}
             </div> 
         </form>
     )

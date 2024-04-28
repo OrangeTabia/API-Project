@@ -5,7 +5,6 @@ import { useEffect } from 'react';
 import OpenModalButton from '../OpenModalButton';
 import DeleteSpot from './DeleteSpot';
 import { MdStarRate } from "react-icons/md";
-import { LiaCopyright } from "react-icons/lia";
 import './ManageSpots.css'; 
 
 const ManageSpots = () => {
@@ -63,10 +62,10 @@ const ManageSpots = () => {
                 })}
 
             </div>
-            <hr className="footer-line"></hr>
+            {/* <hr className="footer-line"></hr>
             <footer>
                 <span><LiaCopyright /> 2024 Tabia Ye</span>
-            </footer>
+            </footer> */}
         </div>
 
     )

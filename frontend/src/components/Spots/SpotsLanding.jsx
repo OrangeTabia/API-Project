@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react'; 
 import { fetchSpots } from '../../store/spot';
 import { MdStarRate } from "react-icons/md";
-import { LiaCopyright } from "react-icons/lia";
 import './SpotsLanding.css'; 
 
 const DisplayAllSpots = () => {
@@ -41,10 +40,10 @@ const DisplayAllSpots = () => {
                     })}
                 </div>
             </div>
-            <hr className="footer-line"></hr>
+            {/* <hr className="footer-line"></hr>
             <footer>
                 <span><LiaCopyright /> 2024 Tabia Ye</span>
-            </footer>
+            </footer> */}
         </>
     )
 }
