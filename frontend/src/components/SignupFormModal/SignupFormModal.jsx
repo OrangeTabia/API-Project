@@ -15,16 +15,16 @@ function SignupFormModal() {
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
 
-  useEffect(() => {
-    const errors = {};
-    if (!email) errors.email = "";
-    if (username.length < 4) errors.username = "";
-    if (!firstName) errors.firstName = "";
-    if (!lastName) errors.lastName = "";
-    if (password.length < 6) errors.password = "";
-    if (!confirmPassword) errors.confirmPassword = "";
-    setErrors(errors); 
-  }, [email, username, firstName, lastName, password, confirmPassword]);
+  // useEffect(() => {
+  //   const errors = {};
+  //   if (!email) errors.email = "";
+  //   if (username.length < 4) errors.username = "";
+  //   if (!firstName) errors.firstName = "";
+  //   if (!lastName) errors.lastName = "";
+  //   if (password.length < 6) errors.password = "";
+  //   if (!confirmPassword) errors.confirmPassword = "";
+  //   setErrors(errors); 
+  // }, [email, username, firstName, lastName, password, confirmPassword]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -91,7 +91,7 @@ function SignupFormModal() {
             />
           </label>
           <br></br>
-          {errors.firstName && <p>{errors.firstName}</p>}
+          {errors && <p>{errors.firstName}</p>}
           <label>
             Last Name
             <br></br>
@@ -103,7 +103,7 @@ function SignupFormModal() {
             />
           </label>
           <br></br>
-          {errors.lastName && <p>{errors.lastName}</p>}
+          {errors && <p>{errors.lastName}</p>}
           <label>
             Password
             <br></br>
@@ -114,7 +114,7 @@ function SignupFormModal() {
               required
             />
           </label>
-          {errors.password && <p>{errors.password}</p>}
+          {errors && <p>{errors.password}</p>}
           <label>
             Confirm Password
             <br></br>
@@ -126,7 +126,7 @@ function SignupFormModal() {
             />
           </label>
           <br></br>
-          {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
+          {errors && <p>{errors.confirmPassword}</p>}
           <button className="signup-button" type="submit" disabled={Object.values(errors).length > 0}>Sign Up</button>
         </div>
       </form>
