@@ -12,11 +12,10 @@ function SignupFormModal() {
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({}); 
   const { closeModal } = useModal();
   const [hasSubmitted, setSubmitted] = useState(false);
 
-  // Front end errors only
   useEffect(() => {
     if (hasSubmitted) {
       // Ensure the passwords match
@@ -164,11 +163,17 @@ function SignupFormModal() {
           <button 
           className="signup-button" 
           type="submit" 
-          disabled={errors.confirmPassword || errors.password || errors.nameLength}
+          disabled={
+            // If there are errors on the FE keys
+            errors.confirmPassword || errors.password || errors.nameLength ||
+            // OR if there are any empty values for the state ("")
+            [email, username, firstName, lastName, password, confirmPassword].includes("")
+          }
           >Sign Up</button>
         </div>
       </form>
   );
+
 }
 
 export default SignupFormModal;
