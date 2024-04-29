@@ -18,10 +18,10 @@ const SpotForm = ({ spot, formType}) => {
     const [price, setPrice] = useState(spot?.price); 
     // These are the non preview images
     const nonPreviewImages = spot?.SpotImages?.filter((image) => !image.preview);
-    const [imageOne, setImageOne] = useState(nonPreviewImages[0]?.url);
-    const [imageTwo, setImageTwo] = useState(nonPreviewImages[1]?.url);
-    const [imageThree, setImageThree] = useState(nonPreviewImages[2]?.url); 
-    const [imageFour, setImageFour] = useState(nonPreviewImages[3]?.url); 
+    const [imageOne, setImageOne] = useState(nonPreviewImages ? nonPreviewImages[0]?.url : '');
+    const [imageTwo, setImageTwo] = useState(nonPreviewImages ? nonPreviewImages[1]?.url : '');
+    const [imageThree, setImageThree] = useState(nonPreviewImages ? nonPreviewImages[2]?.url : ''); 
+    const [imageFour, setImageFour] = useState(nonPreviewImages ? nonPreviewImages[3]?.url : ''); 
     // Call this the preview Image
     const [previewImage, setPreviewImage] = useState(spot?.SpotImages?.find((image) => image.preview)?.url);
     const [errors, setErrors] = useState({}); 

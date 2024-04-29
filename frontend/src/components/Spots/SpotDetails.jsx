@@ -101,7 +101,7 @@ const SpotDetails = () => {
                     </div>
                 </div>
 
-
+                <br></br>
                 <hr></hr>
                 <div className="star-and-reviews">
                     <span><MdStarRate />{numRev ? `${(spotInfo.avgRating).toFixed(1)} · ${numRev} ${numRev > 1 ? 'reviews': 'review'}` : 'New'}</span>

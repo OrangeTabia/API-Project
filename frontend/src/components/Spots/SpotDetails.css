@@ -1,6 +1,7 @@
 .spot-details-div {
     margin-left: 100px;
     margin-right: 100px;
+    margin-bottom: 100px;
 }
 
 .images-description-reserve {
@@ -24,7 +25,8 @@
 .left-image {
     width: 100%;
     border-radius: 12px 0 0 12px;
-    object-fit: cover
+    object-fit: cover;
+    max-height: 500px;
 }
 
 .right-images-div {
@@ -38,7 +40,8 @@
 
 .right-images {
     width: 49%;
-    object-fit: cover
+    object-fit: cover;
+    max-height: 245.3px;
 }
 
 .host-description-reserve {

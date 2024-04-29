@@ -95,6 +95,8 @@ h3 {
 .textarea-description {
     width: 96%;
     height: 10%;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;  
 }
 
 .price-input {
