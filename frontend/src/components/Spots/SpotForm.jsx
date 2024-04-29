@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { fetchAddImage, fetchCreateSpot, fetchDeleteImage, fetchEditSpot } from '../../store/spot';
 import './SpotForm.css'; 
 
-const SpotForm = ({ spot, formType}) => {
+const SpotForm = ({ spot, formName, formType}) => {
     const navigate = useNavigate(); 
     const dispatch = useDispatch();
     const [country, setCountry] = useState(spot?.country); 
@@ -169,7 +169,7 @@ const SpotForm = ({ spot, formType}) => {
     return (
         <form className="form" onSubmit={(e) => handleSubmit(e, errors)}>
             <div className="form-size">
-                <h1>Create a new Spot</h1>
+                <h1>{formName}</h1>
                 <h3>Where&apos;s your place located?</h3>
                 <p className="location-description">Guests will only get your exact address once they booked a reservation.</p>
                 <label>

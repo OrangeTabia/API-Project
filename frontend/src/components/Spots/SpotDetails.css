@@ -201,14 +201,14 @@
     width: 100%;
     margin-bottom: 12px;
     color: white;
-    background-color: #3f7043;
+    background-color: rgb(219, 3, 3);
     border-radius: 10px;
     border: none;
 }
 
 .review-delete-button:hover {
     cursor: pointer;
-    background-color: forestgreen;
+    background-color: red;
 }
 
 .review-keep-button {

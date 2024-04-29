@@ -26,6 +26,7 @@ const CreateSpot = () => {
             <SpotForm 
             spot={spot}
             formType={"Create Spot"}
+            formName={("Create a New Spot")}
             />
         )
     }
